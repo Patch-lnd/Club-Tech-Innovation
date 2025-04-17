@@ -1,0 +1,14 @@
+fieldset{
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    width: 25%;
+}
+button{
+    background-color: #3498db;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    
+
+}
