@@ -37,23 +37,10 @@ db.connect((err)=>{
 // Sets "EJS" view engine for my app
 app.set("view engine", "ejs");
 
-app.get("/",(req,res)=>{
-    res.render("index");
-    // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
-})
-app.get("/connexion",(req,res)=>{
-    res.render("connexion");
-    // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
-})
-app.get("/compte",(req,res)=>{
-    res.render("compte");
-    // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
-})
-app.use((req,res)=>{
-    res.status(404).render("error");
-    // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
-})
+// Define Routes
+app.use('/', require('./routes/pages'));
+app.use('/auth', require("./routes/auth"))
 
 app.listen(3001, () => {
-    console.log("Server started on port 3001")
-})
+    console.log("Server started on port 3001");
+});

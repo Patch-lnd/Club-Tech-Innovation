@@ -50,7 +50,7 @@
       margin-bottom: 2rem;
     }
 
-    a {
+     .return{
       display: inline-block;
       background: #00d1ff;
       color: #121212;
@@ -62,7 +62,7 @@
       box-shadow: 0 5px 15px rgba(0, 209, 255, 0.3);
     }
 
-    a:hover {
+    .return :hover {
       background: #0fb8e3;
     }
 
@@ -94,7 +94,7 @@
   </style>
 </head>
 <body>
-
+  <%- include("header.ejs") %>
   <!-- Logo (circuit-tech style) -->
   <svg class="logo" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
     <circle cx="32" cy="32" r="30" stroke="#00d1ff" stroke-width="3" fill="none"/>
@@ -106,7 +106,7 @@
   <h1>404</h1>
   <h2>Page introuvable</h2>
   <p>Cette page n'existe pas ou a été déplacée. Mais tout va bien, vous pouvez revenir tranquillement à l’accueil.</p>
-  <a href="/">Retour à l'accueil</a>
+  <a class="return" href="/">Retour à l'accueil</a>
 
   <!-- Tech illustration -->
   <svg class="illustration" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
