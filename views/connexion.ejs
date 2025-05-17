@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Animated Sign-Up Form</title>
+  <link rel="stylesheet" href="/connexion.css">
+  <!-- Just give a single slash "/" not a complete route path
+      Express understands it has to get the Frontend from the folder "public" -->
+</head>
+<body>
+  <div class="form-container">
+    <h2>Create Account</h2>
+    <form id="signup-form" novalidate>
+      <div class="input-group">
+        <input type="text" id="username" required placeholder=" " />
+        <label for="username">Username</label>
+        <div class="error-message" id="error-username">Username is required.</div>
+      </div>
+      <div class="input-group">
+        <input type="email" id="email" required placeholder=" " />
+        <label for="email">Email</label>
+        <div class="error-message" id="error-email">Please enter a valid email.</div>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" required placeholder=" " />
+        <label for="password">Password</label>
+        <div class="error-message" id="error-password">Password must be at least 6 characters.</div>
+      </div>
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('signup-form');
+    const username = document.getElementById('username');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      let valid = true;
+
+      if (username.value.trim() === '') {
+        showError('username', true);
+        valid = false;
+      } else {
+        showError('username', false);
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.value.trim())) {
+        showError('email', true);
+        valid = false;
+      } else {
+        showError('email', false);
+      }
+
+      if (password.value.length < 6) {
+        showError('password', true);
+        valid = false;
+      } else {
+        showError('password', false);
+      }
+
+      if (valid) {
+        alert('Sign up successful!');
+        form.reset();
+      }
+    });
+
+    function showError(field, show) {
+      const error = document.getElementById(`error-${field}`);
+      error.style.display = show ? 'block' : 'none';
+    }
+  </script>
+</body>
+</html>
