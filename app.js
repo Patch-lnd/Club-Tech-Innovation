@@ -1,12 +1,20 @@
 const express = require("express");
 const mysql = require("mysql");
 const app = express();
+// Security process module
+const dotenv = require("dotenv");
+// Giving the path where the dotenv file will be strored for configs inside
+dotenv.config({path: './configs.env'});
+
+//Database Initialization
 const db = mysql.createConnection({
-    host:'localhost',
-    user: 'root', 
-    password:'',
-    database:'ti-login'
+    host: process.env.db_host,
+    user: process.env.db_user, 
+    password: process.env.db_password,
+    database:process.env.DataBase
 });
+
+//
 
 db.connect((err)=>{
     if(err){
