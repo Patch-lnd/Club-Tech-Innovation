@@ -39,6 +39,8 @@ app.use(express.urlencoded({extended: false}))
 // Ensures that the values we are grabbing from the form comes as JSON
 app.use(express.json())
 
+
+
 // Sets "EJS" view engine for my app
 app.set("view engine", "ejs");
 

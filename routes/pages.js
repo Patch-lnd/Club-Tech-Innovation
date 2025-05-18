@@ -6,10 +6,6 @@ router.get("/",(req,res)=>{
     res.render("index");
     // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
 });
-router.get("/connexion",(req,res)=>{
-    res.render("connexion");
-    // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
-});
 router.get("/compte",(req,res)=>{
     res.render("compte");
     // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
@@ -24,6 +20,10 @@ router.get("/blog",(req,res)=>{
 });
 router.get("/apropos",(req,res)=>{
     res.render("apropos");
+    // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
+});
+router.get("/connexion",(req,res)=>{
+    res.render("connexion");
     // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
 });
 router.use((req,res)=>{
