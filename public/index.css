@@ -3,18 +3,59 @@ body{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 nav{
-    background: linear-gradient(135deg, #121212, #1f1f1f);
-    padding: 20px 20px;
+    background: linear-gradient(
+        to bottom right,
+        rgba(15, 25, 45, 0.9),   /* Dark navy with a hint of blue */
+        rgba(5, 10, 30, 0.85)    /* Deeper, cooler blue */
+      );
+/*     background: linear-gradient(135deg, #121212, #1f1f1f);
+ */    padding: 20px 70px 20px 20px;
 }
 nav ul{
-    display: flex;
+    width: fit-content;
     gap: 35px;
     list-style: none;
     margin-top: 0;
     display: flex;
-    justify-content: flex-end;
+    justify-self:flex-end;
 }
 nav ul li a{
+    font-size: large;
     text-decoration: none;
-    color: whitesmoke;
+    padding: 3px;
+    position: relative;
+    transition: color 0.3s ease;
+    color: #CCCCCC;
 }
+  nav a:hover {
+    color: #3399FF;              /* Electric blue hover */
+    background: linear-gradient(to right, #2c3e50, #3399FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    height: 2px;
+    background: #3399FF;
+    transition: width 0.3s ease;
+  }
+  
+  nav a:hover::after {
+    width: 100%;
+  }
+  nav a.active {
+    color: #3399FF;
+    background: linear-gradient(to right, #2c3e50, #3399FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+  }
+  
+  nav a.active::after {
+    width: 100%;
+  }
