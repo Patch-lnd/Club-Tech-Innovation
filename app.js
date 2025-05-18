@@ -41,6 +41,7 @@ app.set("view engine", "ejs");
 app.use('/', require('./routes/pages'));
 app.use('/auth', require("./routes/auth"))
 
+
 app.listen(3001, () => {
     console.log("Server started on port 3001");
 });

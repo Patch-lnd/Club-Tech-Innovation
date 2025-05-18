@@ -3,8 +3,8 @@ body{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 nav{
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 15px 15px;
+    background: linear-gradient(135deg, #121212, #1f1f1f);
+    padding: 20px 20px;
 }
 nav ul{
     display: flex;
