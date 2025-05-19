@@ -24,7 +24,7 @@ router.get("/apropos",(req,res)=>{
 });
 // This GET route serves the signup form
 router.get('/connexion', (req, res) => {
-  res.render('connexion', { message: null }); // ensure message is always defined
+  res.render('connexion', { message: null, success: null }); // ensure message is always defined
 });
 /* router.use((req,res)=>{
     res.status(404).render("error");

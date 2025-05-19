@@ -2,7 +2,7 @@ const mysql = require("mysql");
 // Getting the jasonwebtoken module
 const jwt = require("jsonwebtoken")
 // Getting the encryption mudule for ourt passwords
-const bcypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 
 //Database Initialization
 const db = mysql.createConnection({
@@ -23,21 +23,38 @@ exports.connexion = async(req, res) => {
     const {name, email, password, passwordConfirm} = req.body
 
     // Making the system to allow an email to be registered just Once
-    db.query('SELECT email FROM users WHERE email = ?', [email], async(error, result) => {
+    db.query('SELECT email, name FROM users WHERE email = ? OR name = ?', [email, name], async(error, result) => {
         if (error) {
             console.log(error)
+            return res.render('connexion', {
+                message: "An error occurred while checking the database.",
+                success: null
+            });
         }
         // "result" commes out as an array, so we wanna check how many came out
         //If >0 it means it's already an email with value on our db
+ // "result" will contain only the email and name columns, making the query more efficient
         if (result.length > 0) {
+            // Check if the email is the cause of the conflict
+            if (result[0].email === email) {
+                return res.render('connexion', {
+                    message: "Email déjà existant",
+                    success: null
+                });
+            }
             
-            return res.render('connexion' ,{
-                message: "email already registered"
-            })
+            // Check if the name is the cause of the conflict
+            if (result[0].name === name) {
+                return res.render('connexion', {
+                    message: "Nom déjà existant",
+                    success: null
+                });
+            }
         }else if (password !== passwordConfirm) {
              
             return res.render('connexion' ,{
-                message: "Passwords do not match"
+                message: "Mot de passe différent",
+                success: null
             })
         }
 
@@ -46,7 +63,17 @@ exports.connexion = async(req, res) => {
         // Our "password" is hashed 8 times which is the standard for a good hashing 
         let hashedPassword = await bcrypt.hash(password, 8)
         console.log(hashedPassword)
-
+        db.query("INSERT INTO users SET ?", {name: name, email: email, password: hashedPassword}, (error, result) =>{
+            if (error) {
+                console.log(error)
+            }else{
+                console.log(result)
+                return res.render('connexion' ,{
+                    success: "Compte Crée avec Success",
+                    message: null
+                }) 
+            }
+        })
     })
 
 }

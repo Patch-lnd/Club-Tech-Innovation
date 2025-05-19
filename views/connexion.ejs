@@ -13,7 +13,7 @@
   <div class="signup-container">
     <h2>Create Account</h2>
     <form action="/auth/connexion" method="POST">
-      <input type="text" placeholder="Full Name" required  name="Fullname" id="Fullname"/>
+      <input type="text" placeholder="Full Name" required  name="name" id="Fullname"/>
       <input type="email" placeholder="Email Address" required  name="email" id="email"/>
       <input type="password" name="password" id="password" placeholder="Password" required />
       <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="Password Confirm" required />
@@ -24,6 +24,9 @@
     </div>
      <% if(message){%>
         <h3 class="alert-danger"><%= message %></h3>
+       <% }%>
+       <% if(success){%>
+        <h3 class="alert-success"><%= success %></h3>
        <% }%>
   </div>
 
