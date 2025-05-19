@@ -26,8 +26,8 @@ router.get("/connexion",(req,res)=>{
     res.render("connexion");
     // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
 });
-router.use((req,res)=>{
+/* router.use((req,res)=>{
     res.status(404).render("error");
-    // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
 });
+ */
 module.exports = router;

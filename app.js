@@ -34,21 +34,18 @@ db.connect((err)=>{
     }
 })
 
-// Makes sure I can take data from any form
-app.use(express.urlencoded({extended: false}))
-// Ensures that the values we are grabbing from the form comes as JSON
-app.use(express.json())
-
-
-
 // Sets "EJS" view engine for my app
 app.set("view engine", "ejs");
+    
+// Ensures that the values we are grabbing from the form comes as JSON
+app.use(express.json())
+// Makes sure I can take data from any form
+app.use(express.urlencoded({extended: true}))
+
 
 // Define Routes
 app.use('/', require('./routes/pages'));
 app.use('/auth', require("./routes/auth"))
-
-
 
 app.listen(3001, () => {
     console.log("Server started on port 3001");
