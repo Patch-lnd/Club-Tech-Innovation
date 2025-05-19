@@ -22,9 +22,9 @@ router.get("/apropos",(req,res)=>{
     res.render("apropos");
     // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
 });
-router.get("/connexion",(req,res)=>{
-    res.render("connexion");
-    // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
+// This GET route serves the signup form
+router.get('/connexion', (req, res) => {
+  res.render('connexion', { message: null }); // ensure message is always defined
 });
 /* router.use((req,res)=>{
     res.status(404).render("error");
