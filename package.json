@@ -4,9 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js",
+    "server": "nodemon app.js",
     "build": "npx @tailwindcss/cli -i ./public/input.css -o ./public/output.css --watch",
-    "dev": "concurrently \"npm run build\" \"npm start\""
+    "start": "concurrently \"npm run build\" \"npm start\""
   },
   "keywords": [],
   "author": "",
