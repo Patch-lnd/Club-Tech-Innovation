@@ -4,14 +4,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "build": "npx @tailwindcss/cli -i ./public/index-input.css -o ./public/index.css --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@tailwindcss/cli": "^4.1.10",
     "bcryptjs": "^3.0.2",
+    "concurrently": "^9.1.2",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
@@ -19,6 +22,7 @@
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "tailwindcss": "^4.1.10"
   }
 }
