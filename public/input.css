@@ -1,0 +1,6 @@
+@tailwilnd base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./index.css";
+@import "./connexion.css";
