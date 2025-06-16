@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 
 //Database Initialization
 const db = mysql.createConnection({
-    host: process.env.db_host,
+    host: process.env.db_host, 
     user: process.env.db_user, 
     password: process.env.db_password,
     database:process.env.DataBase
@@ -33,7 +33,7 @@ exports.connexion = async(req, res) => {
         }
         // "result" commes out as an array, so we wanna check how many came out
         //If >0 it means it's already an email with value on our db
- // "result" will contain only the email and name columns, making the query more efficient
+        // "result" will contain only the email and name columns, making the query more efficient
         if (result.length > 0) {
             // Check if the email is the cause of the conflict
             if (result[0].email === email) {
@@ -58,7 +58,7 @@ exports.connexion = async(req, res) => {
             })
         }
 
-        // We "await" since the encryption can take liitle longet than the normal 
+        // We "await" since the encryption can take little longet than the normal 
         // Form execution time. We then add "async" at the beginning of our function db.query
         // Our "password" is hashed 8 times which is the standard for a good hashing 
         let hashedPassword = await bcrypt.hash(password, 8)
@@ -76,4 +76,31 @@ exports.connexion = async(req, res) => {
         })
     })
 
-}
+}/* 
+exports.login = async(req, res) => {
+    const {name, password} = req.body
+    db.query('SELECT email, name FROM users WHERE email = ? OR name = ?', [email, name], async(error, result) => {
+  
+        if (result.length === 0) {
+            return res.render('connexion' ,{
+                success: null,
+                message: "Email ou Nom Incorrect"
+            }) 
+        }
+  
+        const isMatch = await bcrypt.compare(password, db.password)
+        if (!isMatch) {
+            return res.render('connexion' ,{
+                success: null,
+                message: "Mot de passe Incorrecte"
+            }) 
+        }
+        const token = jwt.sing(
+            {id: db.id, role: user.role},
+            process.env.JWT_SECRET,
+            {expiresIn: "2h"}
+        )
+        res.status(200).json({token})
+    })
+
+} */
