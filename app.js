@@ -46,6 +46,9 @@ app.use(express.urlencoded({extended: true}))
 // Define Routes
 app.use('/', require('./routes/pages'));
 app.use('/auth', require("./routes/auth"))
+ app.use((req,res)=>{
+    res.status(404).render("error");
+});
 
 app.listen(3001, () => {
     console.log("Server started on port 3001");

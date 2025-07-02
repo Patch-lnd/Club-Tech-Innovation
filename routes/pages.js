@@ -1,4 +1,5 @@
 const express = require("express");
+const authRoutes = require("./auth")
 
 const router = express.Router();
 
@@ -26,6 +27,7 @@ router.get("/apropos",(req,res)=>{
 router.get('/connexion', (req, res) => {
   res.render('connexion', { message: null, success: null }); // ensure message is always defined
 });
+//router.use('/auth', authRoutes)
 /* router.use((req,res)=>{
     res.status(404).render("error");
 });
