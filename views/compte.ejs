@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Account Dashboard</title>
+  <style>
+    :root {
+      --bg: #1f2937;
+      --card-bg: #111827;
+      --text: #f3f4f6;
+      --subtext: #9ca3af;
+      --accent: #818cf8;
+      --hover: #374151;
+      --error: #f87171;
+      --success: #34d399;
+    }
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    header {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.8rem;
+    }
+    .logout-btn {
+      background: transparent;
+      border: 1.5px solid var(--error);
+      color: var(--error);
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+    .logout-btn:hover {
+      background: var(--error);
+      color: var(--bg);
+    }
+
+    .container {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 900px;
+      border-radius: 14px;
+      padding: 2rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+
+    /* Sidebar menu */
+    nav.sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      border-right: 1px solid var(--hover);
+      padding-right: 1.5rem;
+    }
+    nav.sidebar button {
+      background: none;
+      border: none;
+      color: var(--subtext);
+      font-weight: 600;
+      padding: 0.6rem 0;
+      cursor: pointer;
+      border-left: 4px solid transparent;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+      text-align: left;
+    }
+    nav.sidebar button.active,
+    nav.sidebar button:hover {
+      color: var(--accent);
+      border-left-color: var(--accent);
+      background: var(--hover);
+      font-weight: 700;
+    }
+
+    /* Main content */
+    section.content {
+      color: var(--text);
+    }
+    section.content h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      font-size: 1.5rem;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.4rem;
+    }
+
+    /* Profile Section */
+    .profile-section {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-image: url("https://i.pravatar.cc/150?img=5");
+      background-size: cover;
+      background-position: center;
+      border: 3px solid var(--accent);
+    }
+    .profile-details {
+      flex-grow: 1;
+    }
+    .profile-details h3 {
+      margin: 0 0 0.3rem 0;
+    }
+    .profile-details p {
+      margin: 0;
+      color: var(--subtext);
+      font-size: 0.95rem;
+    }
+    .edit-profile-btn {
+      background: var(--accent);
+      border: none;
+      color: var(--bg);
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      font-size: 0.9rem;
+    }
+    .edit-profile-btn:hover {
+      background: #6b7df5;
+    }
+
+    /* Form Styles */
+    form {
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    label {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      padding: 0.6rem 0.8rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      background: var(--hover);
+      color: var(--text);
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      outline: 2px solid var(--accent);
+      background: var(--card-bg);
+    }
+    button.submit-btn {
+      margin-top: 1rem;
+      background: var(--accent);
+      border: none;
+      color: var(--bg);
+      font-weight: 700;
+      padding: 0.7rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+    button.submit-btn:hover {
+      background: #6b7df5;
+    }
+
+    /* Notifications */
+    .notification-toggle {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .notification-toggle input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    .notification-toggle label {
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+    }
+
+    /* Order History */
+    .order-history {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid var(--hover);
+      border-radius: 8px;
+      padding: 1rem;
+      background: var(--hover);
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .order-history table {
+      width: 100%;
+      border-collapse: collapse;
+      color: var(--text);
+    }
+    .order-history th, .order-history td {
+      padding: 0.4rem 0.8rem;
+      border-bottom: 1px solid var(--hover);
+      text-align: left;
+    }
+    .order-history th {
+      background: var(--card-bg);
+      font-weight: 700;
+    }
+    .order-history tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .container {
+        grid-template-columns: 1fr;
+        padding: 1.5rem 1rem;
+      }
+      nav.sidebar {
+        flex-direction: row;
+        border-right: none;
+        border-bottom: 1px solid var(--hover);
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+        justify-content: space-around;
+      }
+      nav.sidebar button {
+        border-left: none;
+        border-bottom: 3px solid transparent;
+        font-size: 1rem;
+      }
+      nav.sidebar button.active,
+      nav.sidebar button:hover {
+        border-left: none;
+        border-bottom-color: var(--accent);
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include("header.ejs") %>
+  <header>
+    <h1>Account Dashboard</h1>
+    <button class="logout-btn" id="logoutBtn">Log Out</button>
+  </header>
+
+  <main class="container">
+    <nav class="sidebar" role="navigation" aria-label="Account sections">
+      <button class="active" data-section="profile">Profile</button>
+      <button data-section="settings">Settings</button>
+      <button data-section="notifications">Notifications</button>
+      <button data-section="orders">Order History</button>
+    </nav>
+
+    <section class="content" id="content">
+
+      <!-- Profile Section -->
+      <section id="profile" class="section active-section">
+        <div class="profile-section">
+          <div class="profile-pic" role="img" aria-label="User avatar"></div>
+          <div class="profile-details">
+            <h3>John Doe <!-- Cetified account --> <i class="fa-solid fa-circle-check"></i></h3>
+            <p>johndoe@example.com</p>
+          </div>
+          <button class="edit-profile-btn" id="editProfileBtn">Edit Profile</button>
+        </div>
+      </section>
+
+      <!-- Settings Section -->
+      <section id="settings" class="section" hidden>
+        <h2>Account Settings</h2>
+        <form id="settingsForm">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" value="JohnDoe" required />
+
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="johndoe@example.com" required />
+
+          <label for="password">Change Password</label>
+          <input type="password" id="password" name="password" placeholder="New password" />
+
+          <button type="submit" class="submit-btn">Save Changes</button>
+        </form>
+      </section>
+
+      <!-- Notifications Section -->
+      <section id="notifications" class="section" hidden>
+        <h2>Notification Preferences</h2>
+        <div class="notification-toggle">
+          <input type="checkbox" id="emailNotif" checked />
+          <label for="emailNotif">Email Notifications</label>
+        </div>
+        <div class="notification-toggle">
+          <input type="checkbox" id="smsNotif" />
+          <label for="smsNotif">SMS Notifications</label>
+        </div>
+      </section>
+
+      <!-- Order History Section -->
+      <section id="orders" class="section" hidden>
+        <h2>Order History</h2>
+        <div class="order-history" tabindex="0" aria-label="User order history">
+          <table>
+            <thead>
+              <tr><th>Order ID</th><th>Date</th><th>Status</th><th>Total</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>#1234</td><td>2024-03-10</td><td>Delivered</td><td>$89.99</td></tr>
+              <tr><td>#1235</td><td>2024-04-02</td><td>Processing</td><td>$42.50</td></tr>
+              <tr><td>#1236</td><td>2024-04-20</td><td>Cancelled</td><td>$0.00</td></tr>
+              <tr><td>#1237</td><td>2024-05-01</td><td>Shipped</td><td>$120.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </section>
+  </main>
+
+  <script>
+    // Sidebar navigation logic
+    const sidebarButtons = document.querySelectorAll('nav.sidebar button');
+    const sections = document.querySelectorAll('section.section');
+
+    sidebarButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class on buttons
+        sidebarButtons.forEach(btn => btn.classList.remove('active'));
+        // Hide all sections
+        sections.forEach(sec => sec.hidden = true);
+        sections.forEach(sec => sec.classList.remove('active-section'));
+
+        // Add active class to clicked button
+        button.classList.add('active');
+        // Show related section
+        const target = button.getAttribute('data-section');
+        const targetSection = document.getElementById(target);
+        if (targetSection) {
+          targetSection.hidden = false;
+          targetSection.classList.add('active-section');
+        }
+      });
+    });
+
+    // Edit Profile button toggles Settings tab and scrolls to username input
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    editProfileBtn.addEventListener('click', () => {
+      document.querySelector('nav.sidebar button[data-section="settings"]').click();
+      document.getElementById('username').focus();
+    });
+
+    // Settings form submit handler
+    const settingsForm = document.getElementById('settingsForm');
+    settingsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Profile settings saved!');
+      // Here, implement actual save logic (API call etc.)
+    });
+
+    // Logout button click
+    const logoutBtn = document.getElementById('logoutBtn');
+    logoutBtn.addEventListener('click', () => {
+      alert('Logging out...');
+      // Implement logout logic here
+    });
+  </script>
+  <br><br><br><br><br>
+ <%- include("footer.ejs") %>
+</body>
+</html>
