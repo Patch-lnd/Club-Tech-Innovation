@@ -1,0 +1,30 @@
+#Node.JS 
+
+#Node modules
+node_modules/
+
+#Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+#Environment variables
+.env
+confings.env
+
+#Build and caxhe files
+#Tailwind CSS
+public/output.css
+
+#Temporary files 
+tmp/
+temp/
+*.tmp
+
+#IDE and System files
+.vscode/
+.DS_Store
+.idea/
+Thumbs.db
