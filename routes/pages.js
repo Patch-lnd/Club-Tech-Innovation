@@ -27,6 +27,11 @@ router.get("/apropos",(req,res)=>{
 router.get('/connexion', (req, res) => {
   res.render('connexion', { message: null, success: null }); // ensure message is always defined
 });
+// This GET route serves the login form
+router.get('/login', (req, res) => {
+  res.render('login', { message: null, success: null }); // ensure message is always defined
+});
+
 //router.use('/auth', authRoutes)
 /* router.use((req,res)=>{
     res.status(404).render("error");

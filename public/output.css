@@ -3,11 +3,20 @@
 .container {
   width: 100%;
 }
+.flex {
+  display: flex;
+}
 .hidden {
   display: none;
 }
 .table {
   display: table;
+}
+.min-h-screen {
+  min-height: 100vh;
+}
+.w-full {
+  width: 100%;
 }
 .flex-grow {
   flex-grow: 1;
@@ -18,9 +27,18 @@
 .transform {
   transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
 }
+.items-center {
+  align-items: center;
+}
+.justify-center {
+  justify-content: center;
+}
 .border {
   border-style: var(--tw-border-style);
   border-width: 1px;
+}
+.text-center {
+  text-align: center;
 }
 .outline {
   outline-style: var(--tw-outline-style);

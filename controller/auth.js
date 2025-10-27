@@ -69,6 +69,7 @@ exports.connexion = async(req, res) => {
         // Our "password" is hashed 8 times which is the standard for a good hashing 
         let hashedPassword = await bcrypt.hash(password, 8)
         console.log(hashedPassword)
+        console.log(password)
         db.query("INSERT INTO users SET ?", {name: name, email: email, password: hashedPassword}, (error, result) =>{
             if (error) {
                 console.log(error)
@@ -82,7 +83,82 @@ exports.connexion = async(req, res) => {
         })
     })
 
-}/* 
+}
+
+// LOGIN Controller 
+exports.login = async(req, res)=> {
+    try{
+        const {identifier, password} = req.body; 
+
+        // Step 1 Check all fields are filled 
+        if (!identifier || !password){
+            return res.render("login", {
+            message: "Veuillez remplir tous les champs",
+            success: null
+        }) 
+    }   // STEP 2 Search for user by email OR name 
+
+    const query = 'SELECT * FROM users WHERE email = ? OR name = ? LIMIT 1';
+    db.query(query, [identifier, identifier], async(error, results) => {
+        if (error) {
+            console.log(error);
+            return res.render('login', {
+                message: "Erreue de Base de Donnée.",
+                success: null
+            });
+        }
+        if (results.length === 0) {
+            return res.render('login', {
+                message: "Email ou Nom Incorrect",
+                success: null
+            });
+        }
+         const user = results[0];
+
+         // Step 3: Compare Passwords
+         const isMatch = await bcrypt.compare(password, user.password);
+         if (!isMatch) {
+            return res.render('login', {
+                message: "Mot de passe Incorrecte",
+                success: null
+            });
+         }
+
+         // Step 4: Create JWT Token
+         const token = jwt.sign(
+            {id: user.id, role: user.role},
+            process.env.JWT_SECRET || "defaultSecretKey",
+            {expiresIn: "2h"}
+         )
+
+         // Step 5: Store in cookie 
+         res.cookie("token", token, {
+            httpOnly: true, 
+            secure: false, // Set true if HTTPS 
+            maxAge: 2 * 60 * 60 * 1000 // 2 hours
+         });
+
+         // STEP 6: Redirect or render success 
+         return res.redirect("/dashboard"); // Redirect to dashboard or desired page
+    });
+    } catch (err) {
+        console.log(err);
+        return res.render('login', {
+            message: "Une erreur est survenue lors de la connexion.",
+            success: null
+        });
+    }      
+}
+
+
+
+
+
+
+
+
+
+/* 
 exports.login = async(req, res) => {
     const {name, password} = req.body
     db.query('SELECT email, name FROM users WHERE email = ? OR name = ?', [email, name], async(error, result) => {

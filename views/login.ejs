@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <%- include("header") %>
+    <br />
+    <div class="bg-white p-8 rounded-2xl shadow-md w-96">
+      <h2 class="text-2xl font-bold text-center mb-4">Connexion</h2>
+
+      <% if (message) { %>
+      <p class="text-red-500 text-center mb-3"><%= message %></p>
+      <% } %> <% if (success) { %>
+      <p class="text-green-500 text-center mb-3"><%= success %></p>
+      <% } %>
+
+      <form action="/auth/login" method="POST" class="space-y-4">
+        <input
+          type="text"
+          name="identifier"
+          placeholder="Email ou Nom d'utilisateur"
+          class="w-full px-3 py-2 border rounded-lg"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Mot de passe"
+          class="w-full px-3 py-2 border rounded-lg"
+          required
+        />
+        <button
+          type="submit"
+          class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+        >
+          Se connecter
+        </button>
+      </form>
+    </div>
+    <br />
+    <%- include("footer.ejs") %>
+  </body>
+</html>
