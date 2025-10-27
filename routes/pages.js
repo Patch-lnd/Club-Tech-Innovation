@@ -31,10 +31,10 @@ router.get('/connexion', (req, res) => {
 router.get('/login', (req, res) => {
   res.render('login', { message: null, success: null }); // ensure message is always defined
 });
+// Route to get to the dashboard after login 
+router.get('/dashboard', (req, res)=>{
+    res.render("dashboard")
+})
 
-//router.use('/auth', authRoutes)
-/* router.use((req,res)=>{
-    res.status(404).render("error");
-});
- */
+/* router.get('/dashboard', authMiddleware, userColtroller.dashboard); */
 module.exports = router;
