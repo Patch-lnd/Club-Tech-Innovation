@@ -22,6 +22,12 @@ exports.connexion = async(req, res) => {
     // Using destructuring syntax
     const {name, email, password, passwordConfirm} = req.body
 
+    if (password.length < 6) {
+        return res.render('connexion', {
+        message: "Le mot de passe doit contenir au moins 6 caractères",
+        success: null
+    })
+    }
     // Making the system to allow an email to be registered just Once
     db.query('SELECT email, name FROM users WHERE email = ? OR name = ?', [email, name], async(error, result) => {
         if (error) {
