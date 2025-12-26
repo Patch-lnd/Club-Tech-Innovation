@@ -1,5 +1,6 @@
 const express = require("express");
 const authRoutes = require("./auth")
+const {protect} = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -32,9 +33,9 @@ router.get('/login', (req, res) => {
   res.render('login', { message: null, success: null }); // ensure message is always defined
 });
 // Route to get to the dashboard after login 
-router.get('/dashboard', (req, res)=>{
+router.get('/dashboard', protect, (req, res)=>{
     res.render("dashboard")
-})
+});
 
 /* router.get('/dashboard', authMiddleware, userColtroller.dashboard); */
 module.exports = router;

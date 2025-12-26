@@ -16,6 +16,10 @@ const PublicDirectory = path.join(__dirname, './public');
 // is actualy using the correct folders shwed by variable "PublicDirectory"
 app.use(express.static(PublicDirectory))
 
+// Defining Cookie Parser to read cookies
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
 //Database Initialization
 const db = mysql.createConnection({
     host: process.env.db_host,
