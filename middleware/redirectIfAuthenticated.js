@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const redirectIfAuthenticated = (req, res, next)=> {
+exports.redirectIfAuthenticated = (req, res, next)=> {
     try{
         // On récupere le token dans les cookies 
         const token =  req.cookies.token;
@@ -24,4 +24,4 @@ const redirectIfAuthenticated = (req, res, next)=> {
 }
 
 // Exporter dirrectement la fonction 
-module.exports = redirectIfAuthenticated;
+/* module.exports = redirectIfAuthenticated; */

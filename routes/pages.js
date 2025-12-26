@@ -1,7 +1,7 @@
 const express = require("express");
 const authRoutes = require("./auth")
 const {protect} = require("../middleware/authMiddleware");
-const redirectIfAuthentificated = require("../middleware/redirectIfAuthenticated"); // Importing the middleware
+const {redirectIfAuthenticated} = require("../middleware/redirectIfAuthenticated"); // Importing the middleware
 
 const router = express.Router();
 
@@ -26,11 +26,11 @@ router.get("/apropos",(req,res)=>{
     // res.send("I love Basketball") RESPOND SENT INTO THE BROWNSER
 });
 // This GET route serves the signup form
-router.get('/connexion', redirectIfAuthentificated, (req, res) => {
+router.get('/connexion', redirectIfAuthenticated, (req, res) => {
   res.render('connexion', { message: null, success: null }); // ensure message is always defined
 });
 // This GET route serves the login form
-router.get('/login', redirectIfAuthentificated, (req, res) => {
+router.get('/login', redirectIfAuthenticated, (req, res) => {
   res.render('login', { message: null, success: null }); // ensure message is always defined
 });
 // Route to get to the dashboard after login 
