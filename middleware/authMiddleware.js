@@ -38,7 +38,7 @@ exports.protect = (req, res, next) => {
     If the token is invalid or expired, it will throw an error 
    */
   try{
-    const decoded = jwt.verify(token, configs.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     /* 
         STEP 3: Attach decoded data to the req.user 
 

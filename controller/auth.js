@@ -128,14 +128,14 @@ exports.login = async(req, res)=> {
          const token = jwt.sign(
             {id: user.id, role: user.role},
             process.env.JWT_SECRET || "defaultSecretKey",
-            {expiresIn: "2h"}
+            {expiresIn: "5h"}
          )
 
          // Step 5: Store in cookie 
          res.cookie("token", token, {
             httpOnly: true, 
             secure: false, // Set true if HTTPS 
-            maxAge: 2 * 60 * 60 * 1000 // 2 hours
+            maxAge: 5 * 60 * 60 * 1000 // 5 hours
          });
 
          // STEP 6: Redirect or render success 
