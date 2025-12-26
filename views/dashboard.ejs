@@ -8,19 +8,37 @@
   </head>
 
   <body>
-    <%- include("header") %> <% if (user.role === "master"){ %>
-    <h1>Welcome to the Master Dashboard, <%= user.name %>!</h1>
+    <%- include("header") %>
+    <div class="flex justify-between items-center ^p-4 bg-gray-100"></div>
+
+    <% if (user.role === "master"){ %>
+    <h1 class="text-2xl font-bold">
+      Welcome to the Master Dashboard, <%= user.name %>!
+    </h1>
     <p>You have full access to all features and settings.</p>
     <!-- Options de master: gerer roles des utilisateurs -->
     <% } else if (user.role === "admin"){ %>
-    <h1>Welcome to the Admin Dashboard, <%= user.name %>!</h1>
+    <h1 class="text-2xl font-bold">
+      Welcome to the Admin Dashboard, <%= user.name %>!
+    </h1>
     <p>You can manage users and content.</p>
     <!-- Options d'admin: modifier le contenu du site -->
 
     <%} else {%>
-    <h1>Bienvenue au Dashboard Utilisateur, <%= user.name %>!</h1>
+    <h1 class="text-2xl font-bold">
+      Bienvenue au Dashboard Utilisateur, <%= user.name %>!
+    </h1>
     <p>Vous pouvez voir et editter votre compte</p>
     <!-- Options d'utilisateur: voir le contenu -->
-    <% } %> <%- include("footer") %>
+    <% } %>
+
+    <!-- Bouton Logout-->
+    <button
+      class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow-md transition duration-200"
+    >
+      <a href="/logout">Logout</a>
+    </button>
+
+    <%- include("footer") %>
   </body>
 </html>

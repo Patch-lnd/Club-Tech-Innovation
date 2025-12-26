@@ -39,5 +39,10 @@ router.get('/dashboard', protect, (req, res)=>{
     res.render("dashboard", {user: req.user})
 });
 
+router.get('/logout', (req, res)=>{
+    res.clearCookie("token");
+    res.redirect("/login");
+});
+
 /* router.get('/dashboard', authMiddleware, userColtroller.dashboard); */
 module.exports = router;
