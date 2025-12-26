@@ -35,7 +35,8 @@ router.get('/login', redirectIfAuthenticated, (req, res) => {
 });
 // Route to get to the dashboard after login 
 router.get('/dashboard', protect, (req, res)=>{
-    res.render("dashboard")
+    // Defining the user's attributes for my dashboard view which depends on the users' role
+    res.render("dashboard", {user: req.user})
 });
 
 /* router.get('/dashboard', authMiddleware, userColtroller.dashboard); */
