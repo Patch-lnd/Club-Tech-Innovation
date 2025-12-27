@@ -4,40 +4,37 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="/images/logo-club.png" type="image/png" />
   </head>
 
   <body>
-    <%- include("header") %>
-    <div class="flex justify-between items-center ^p-4 bg-gray-100"></div>
-
-    <% if (user.role === "master"){ %>
-    <h1 class="text-2xl font-bold">
-      Welcome to the Master Dashboard, <%= user.name %>!
-    </h1>
+    <%- include("header") %> <% if (user.role === "master"){ %>
+    <h1>Bienvenue au Dashboard Master, <%= user.name %>!</h1>
     <p>You have full access to all features and settings.</p>
     <!-- Options de master: gerer roles des utilisateurs -->
     <% } else if (user.role === "admin"){ %>
-    <h1 class="text-2xl font-bold">
-      Welcome to the Admin Dashboard, <%= user.name %>!
-    </h1>
+    <h1>Bienvenue au Dashboard Admin, <%= user.name %>!</h1>
     <p>You can manage users and content.</p>
     <!-- Options d'admin: modifier le contenu du site -->
 
     <%} else {%>
-    <h1 class="text-2xl font-bold">
+    <h1 class="text-3xl font-bold text-blue-500">
       Bienvenue au Dashboard Utilisateur, <%= user.name %>!
     </h1>
     <p>Vous pouvez voir et editter votre compte</p>
     <!-- Options d'utilisateur: voir le contenu -->
     <% } %>
 
+    <div class="flex justify-between items-center p-4 bg-gray-100"></div>
+
     <!-- Bouton Logout-->
-    <button
-      class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow-md transition duration-200"
+    <a
+      href="/logout"
+      class="block w-fit rounded-xl bg-red-500 text-white px-6 py-3 font-semibold shadow-lg"
     >
-      <a href="/logout">Logout</a>
-    </button>
+      Logout
+    </a>
 
     <%- include("footer") %>
   </body>
