@@ -16,7 +16,7 @@ async function sendOTP(email, otp){
         from: '"CETI Club"<djeumenipatchepiaarthursamuel@gmail.com>',
         to: email,
         subject: "Votre code unique pour le CETI",
-        text: `Votre code unique est: ${otp}, valide 5 minutes. Ne le partagez avec personne.`,
+        html: `<p>Votre code unique est: <b style="font-size: 24px;">${otp}</b></p>. </br><p>Valide 5 minutes, Ne le partagez avec personne.</p>`,
     };
     await transporter.sendMail(mailOptions); // Envoi de l'email
     console.log(`OTP envoyé avec success vers ${email} : ${otp}`);

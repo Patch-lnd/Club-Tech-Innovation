@@ -8,6 +8,9 @@ const dotenv = require("dotenv");
 // Giving the path where the dotenv file will be strored for configs inside
 dotenv.config({path: './configs.env'});
 
+const authController = require("./controller/auth");   
+
+
 // Variable leading to the path where all the Frontend, JS will be strored 
 // __dirname is a global variable that gives the current path 
 const PublicDirectory = path.join(__dirname, './public');
@@ -46,7 +49,13 @@ app.use(express.json())
 // Makes sure I can take data from any form
 app.use(express.urlencoded({extended: true}))
 
+// Page pour entrer le code OTP 
+app.get("/otp", (req, res)=>{
+    const{ userId, message} = req.query; // On peut passer l'ID utilisateur via query 
+    res.render("otp", {userId, message}); // Rendre la page OTP avec l'ID utilisateur et le message 
+})
 
+app.post("/verify-otp", authController.verifyOTP);
 // Define Routes
 app.use('/', require('./routes/pages'));
 app.use('/auth', require("./routes/auth"))

@@ -130,22 +130,10 @@ exports.login = async(req, res)=> {
             });
          }
 
-         // Step 4: Create JWT Token
-         const token = jwt.sign(
-            {id: user.id, role: user.role, name: user.name},
-            process.env.JWT_SECRET || "defaultSecretKey",
-            {expiresIn: "5h"}
-         )
-
-         // Step 5: Store in cookie 
-         res.cookie("token", token, {
-            httpOnly: true, 
-            secure: false, // Set true if HTTPS 
-            maxAge: 5 * 60 * 60 * 1000 // 5 hours
-         });
-
-         // STEP 6: Redirect or render success 
-         return res.redirect("/dashboard"); // Redirect to dashboard or desired page
+         // STEP 4: OTP ACTIVATION 
+         createAndSendOTP(user); // Génère OTP et l'envoie par email
+        res.redirect(`/otp?userId=${user.id}&message=Un code a été envoyé sur votre email`);
+        //  return res.redirect("/dashboard"); // Redirect to dashboard or desired page
     });
     } catch (err) {
         console.log(err);
@@ -175,30 +163,79 @@ exports.login = async(req, res)=> {
     );
 }
 
-function verifyOTP(req, res){
-    const {userId, otp} = req.body;
+exports.verifyOTP = function(req, res) {
+    // On récupère les données envoyées depuis le formulaire OTP (userId et otp)
+    const { userId, otp } = req.body;
 
+    // On cherche dans la table otp_codes le code envoyé par l'utilisateur
+    // Il doit correspondre au user_id, au code, ne pas avoir été utilisé, et ne pas être expiré
     db.query(
         "SELECT * FROM otp_codes WHERE user_id = ? AND code = ? AND used = 0 AND expires_at >= NOW()",
         [userId, otp],
         (err, rows) => {
+            // Si une erreur survient pendant la requête, on renvoie une erreur serveur
             if (err) return res.status(500).send("Erreur serveur");
 
-            if (rows.length === 0){
+            // Si aucune ligne n'est trouvée, le code est invalide ou expiré
+            if (rows.length === 0) {
                 return res.status(400).send("Code OTP invalide ou expiré");
             }
 
-            // Marquer le code comme utilisé
-            db.query("UPDATE otp_codes SET used = 1 WHERE id = ?", [rows[0].id], (err2) => {
-                if (err2) return res.status(500).send("Erreur serveur");
-                
-                // Connecter l'utilisateur (exemple session)
-                req.session.userID = userId;
-                res.redirect("/dashboard");    
-            });
+            // Récupérer l'ID du code OTP validé pour le marquer comme utilisé
+            const otpId = rows[0].id;
+
+            // Maintenant, on récupère les informations complètes de l'utilisateur
+            db.query(
+                "SELECT * FROM users WHERE id = ? LIMIT 1",
+                [userId],
+                (err2, users) => {
+                    if (err2 || users.length === 0) {
+                        // Si erreur ou utilisateur introuvable, renvoyer erreur
+                        return res.status(500).send("Erreur serveur");
+                    }
+
+                    // On récupère l'objet utilisateur
+                    const user = users[0];
+
+                    // Marquer le code OTP comme utilisé pour qu'il ne puisse plus servir
+                    db.query(
+                        "UPDATE otp_codes SET used = 1 WHERE id = ?",
+                        [otpId],
+                        (err3) => {
+                            if (err3) return res.status(500).send("Erreur serveur");
+
+                            // Créer le JWT final avec id, role et nom de l'utilisateur
+                            // process.env.JWT_SECRET est la clé secrète définie dans ton .env
+                            const token = jwt.sign(
+                                {
+                                    id: user.id,
+                                    role: user.role,
+                                    name: user.name
+                                },
+                                process.env.JWT_SECRET || "defaultSecretKey",
+                                { expiresIn: "5h" } // Token valide 5 heures
+                            );
+
+                            // Stocker le JWT dans un cookie sécurisé
+                            // httpOnly empêche l'accès via JavaScript côté client
+                            // secure false car on est en HTTP, mettre true en HTTPS
+                            // maxAge définit la durée de vie du cookie en ms
+                            res.cookie("token", token, {
+                                httpOnly: true,
+                                secure: false,
+                                maxAge: 5 * 60 * 60 * 1000 // 5 heures
+                            });
+
+                            // Rediriger l'utilisateur vers le dashboard maintenant qu'il est connecté
+                            res.redirect("/dashboard");
+                        }
+                    );
+                }
+            );
         }
     );
 }
+
 
 
 
