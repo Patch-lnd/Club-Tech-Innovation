@@ -4,6 +4,12 @@ const jwt = require("jsonwebtoken")
 // Getting the encryption mudule for ourt passwords
 const bcrypt = require("bcryptjs");
 
+const {generateOTP} = require("../middleware/otp");
+// generates Mailer module to send OTP to users
+const {sendOTP} = require("../middleware/mailer");
+// Sends the mails to users
+
+
 //Database Initialization
 const db = mysql.createConnection({
     host: process.env.db_host, 
@@ -151,9 +157,48 @@ exports.login = async(req, res)=> {
 }
 
 
+ function createAndSendOTP(user){
+    const otp = generateOTP();
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
 
+    // Store OTP in database
+     db.query(
+        "INSERT INTO otp_codes(user_id, code, expires_at) VALUES(?,?,?)",
+        [user.id, otp, expiresAt],
+        async(err, result)=>{
+            if (err) return console.log(err);
+            console.log("OTP enregisrré en base de données : ", otp);
 
+            // Envoir de l'OTP par email
+            await sendOTP (user.email, otp);
+        }
+    );
+}
 
+function verifyOTP(req, res){
+    const {userId, otp} = req.body;
+
+    db.query(
+        "SELECT * FROM otp_codes WHERE user_id = ? AND code = ? AND used = 0 AND expires_at >= NOW()",
+        [userId, otp],
+        (err, rows) => {
+            if (err) return res.status(500).send("Erreur serveur");
+
+            if (rows.length === 0){
+                return res.status(400).send("Code OTP invalide ou expiré");
+            }
+
+            // Marquer le code comme utilisé
+            db.query("UPDATE otp_codes SET used = 1 WHERE id = ?", [rows[0].id], (err2) => {
+                if (err2) return res.status(500).send("Erreur serveur");
+                
+                // Connecter l'utilisateur (exemple session)
+                req.session.userID = userId;
+                res.redirect("/dashboard");    
+            });
+        }
+    );
+}
 
 
 
