@@ -33,9 +33,6 @@ exports.connexion = async (req, res) => {
     // We collect the data sent by the html form 
     const { name, email, password, passwordConfirm } = req.body
 
-    // Our "password" is hashed 8 times which is the standard for a good hashing 
-    let hashedPassword = await bcrypt.hash(password, 8)
-
 
     // Vérification de la longueur du mot de passe
     if (password.length < 6) {
@@ -85,7 +82,7 @@ exports.connexion = async (req, res) => {
 
         // Vérification également dans la table pending_users
         db.query(
-            'SELECT email, name FROM pending_users WHERE email = ? OR name = ?',
+            'SELECT id, name, email, password, token_expires_at FROM pending_users WHERE email = ? OR name = ? LIMIT 1',
             [email, name],
             async (pendingErr, pendingResult) => {
                 if (pendingErr) {
@@ -110,6 +107,10 @@ exports.connexion = async (req, res) => {
                     }
 
                     // CASE 2: Token is expired -> Allow recreation by updating the pending record 
+
+                    // Our "password" is hashed 8 times which is the standard for a good hashing 
+                    let hashedPassword = await bcrypt.hash(password, 8)
+
                     // We generate a new token and new expiration date
                     const newEmailToken = crypto.randomBytes(32).toString("hex");
                     const newTokenExpriresAt = new Date(Date.now() + 15*60*60*1000);
@@ -153,6 +154,9 @@ exports.connexion = async (req, res) => {
                 // Si tout est bon, on peut maintenant hasher le mot de passe
                 // We "await" since the encryption can take little longer than normal 
                 // Form execution time. We then add "async" at the beginning of our function db.query
+
+                // Our "password" is hashed 8 times which is the standard for a good hashing 
+                let hashedPassword = await bcrypt.hash(password, 8)
 
                 console.log("Password hashed:", hashedPassword)
                 console.log("Password plain:", password)
