@@ -131,7 +131,7 @@ exports.connexion = async (req, res) => {
                             const verificationLink = `${protocol}://${host}/auth/verify-email?token=${emailToken}`;
 
                             // Envoi de l'email de vérification
-                            await sendOTP(email, `Bienvenue ${name} ! Veuillez vérifier votre email en cliquant sur ce lien : ${verificationLink}`);
+                            await sendEmailVerify(email, `Bienvenue ${name} ! Veuillez vérifier votre email en cliquant sur ce lien : ${verificationLink}`);
 
                             // Message pour informer l'utilisateur
                             return res.render("connexion", {

@@ -1,7 +1,7 @@
 const express = require("express");
 const authRoutes = require("./auth")
 const {protect} = require("../middleware/authMiddleware");
-const {redirectIfAuthenticated} = require("../middleware/redirectIfAuthenticated"); // Importing the middleware
+const {redirectIfAuthenticated} = require("../middleware/redirectIfAuthenticated"); // Importing the middleware to redirect users to dashboard if the are connected and try to go to login or register
 
 const router = express.Router();
 
