@@ -9,7 +9,7 @@ const crypto = require("crypto");
 
 const {generateOTP} = require("../middleware/otp");
 // generates Mailer module to send OTP to users
-const {sendOTP} = require("../middleware/mailer");
+const {sendOTP, sendEmailVerify} = require("../middleware/mailer");
 const e = require("express");
 // Sends the mails to users
 
@@ -32,6 +32,10 @@ exports.connexion = async (req, res) => {
     // Using destructuring syntax
     // We collect the data sent by the html form 
     const { name, email, password, passwordConfirm } = req.body
+
+    // Our "password" is hashed 8 times which is the standard for a good hashing 
+    let hashedPassword = await bcrypt.hash(password, 8)
+
 
     // Vérification de la longueur du mot de passe
     if (password.length < 6) {
@@ -108,9 +112,9 @@ exports.connexion = async (req, res) => {
                     // CASE 2: Token is expired -> Allow recreation by updating the pending record 
                     // We generate a new token and new expiration date
                     const newEmailToken = crypto.randomBytes(32).toString("hex");
-                    const newTokenExpriresAt = new Date(Date.now() + 15*60*60);
+                    const newTokenExpriresAt = new Date(Date.now() + 15*60*60*1000);
 
-                    const updateQuery = `UPDATE pending_users SET name = ?, email = ?, password = ?, email_token = ?, token_expires_at = ? WHERE is = ?`;
+                    const updateQuery = `UPDATE pending_users SET name = ?, email = ?, password = ?, email_token = ?, token_expires_at = ? WHERE id = ?`;
 
                     db.query( updateQuery, [name, email, hashedPassword, newEmailToken, newTokenExpriresAt, pendingUser.id],
                         async(updateErr)=>{
@@ -128,7 +132,7 @@ exports.connexion = async (req, res) => {
                             // Récupérer dynamiquement le nom de domaine ou l'adresse IP du serveur
                             const host = req.get('host');
                             // Lien complet pour vérifier l'email
-                            const verificationLink = `${protocol}://${host}/auth/verify-email?token=${emailToken}`;
+                            const verificationLink = `${protocol}://${host}/auth/verify-email?token=${newEmailToken}`;
 
                             // Envoi de l'email de vérification
                             await sendEmailVerify(email, `Bienvenue ${name} ! Veuillez vérifier votre email en cliquant sur ce lien : ${verificationLink}`);
@@ -149,11 +153,10 @@ exports.connexion = async (req, res) => {
                 // Si tout est bon, on peut maintenant hasher le mot de passe
                 // We "await" since the encryption can take little longer than normal 
                 // Form execution time. We then add "async" at the beginning of our function db.query
-                // Our "password" is hashed 8 times which is the standard for a good hashing 
-                let hashedPassword = await bcrypt.hash(password, 8)
+
                 console.log("Password hashed:", hashedPassword)
                 console.log("Password plain:", password)
-
+                
                 // Génération du token pour la vérification email
                 const emailToken = crypto.randomBytes(32).toString("hex");
 
@@ -182,7 +185,7 @@ exports.connexion = async (req, res) => {
                         const verificationLink = `${protocol}://${host}/auth/verify-email?token=${emailToken}`;
 
                         // Envoi de l'email de vérification
-                        await sendOTP(email, `Bienvenue ${name} ! Veuillez vérifier votre email en cliquant sur ce lien : ${verificationLink}`);
+                        await sendEmailVerify(email, `Bienvenue ${name} ! Veuillez vérifier votre email en cliquant sur ce lien : ${verificationLink}`);
 
                         // Message pour informer l'utilisateur
                         return res.render("connexion", {

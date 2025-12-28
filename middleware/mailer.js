@@ -22,7 +22,7 @@ async function sendOTP(email, otp){
     console.log(`OTP envoyé avec success vers ${email} : ${otp}`);
 }
 
-async function sendEmailVerify(email, otp){
+async function sendEmailVerify(email, verificationLink){
     const mailOptions = {
         from: '"CETI Club"<djeumenipatchepiaarthursamuel@gmail.com>',
         to: email,
