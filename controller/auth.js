@@ -94,11 +94,57 @@ exports.connexion = async (req, res) => {
 
                 // Si un compte est déjà en cours de création
                 if (pendingResult.length > 0) {
-                    return res.render('connexion', {
-                        message: "Un compte avec ce nom ou email est déjà en cours de création. Veuillez vérifier votre email.",
-                        success: null
-                    })
+
+                    const pendingUser = pendingResult[0];
+
+                    // CASE 1: Token is still valid -> Block and ask user to wait or resend 
+                    if (new Date(pendingUser.token_expires_at) > new Date()) {
+                        return res.render('connexion', {
+                            message: "Un compte avec ce nom ou email est déjà en cours de création. Veuillez vérifier votre email.",
+                            success: null
+                        });
+                    }
+
+                    // CASE 2: Token is expired -> Allow recreation by updating the pending record 
+                    // We generate a new token and new expiration date
+                    const newEmailToken = crypto.randomBytes(32).toString("hex");
+                    const newTokenExpriresAt = new Date(Date.now() + 15*60*60);
+
+                    const updateQuery = `UPDATE pending_users SET name = ?, email = ?, password = ?, email_token = ?, token_expires_at = ? WHERE is = ?`;
+
+                    db.query( updateQuery, [name, email, hashedPassword, newEmailToken, newTokenExpriresAt, pendingUser.id],
+                        async(updateErr)=>{
+                            if(updateErr){
+                                console.log(updateErr);
+                                return res.render('connexion', {
+                                    message: "Erreur lors de la mise a jour du compte en attente.",
+                                    success: null
+                                });
+                            }
+                            // Send the now verification email 
+                            // Construction du lien de vérification
+                            // Déterminer si on est sur http ou https
+                            const protocol = req.secure ? 'https' : 'http';
+                            // Récupérer dynamiquement le nom de domaine ou l'adresse IP du serveur
+                            const host = req.get('host');
+                            // Lien complet pour vérifier l'email
+                            const verificationLink = `${protocol}://${host}/auth/verify-email?token=${emailToken}`;
+
+                            // Envoi de l'email de vérification
+                            await sendOTP(email, `Bienvenue ${name} ! Veuillez vérifier votre email en cliquant sur ce lien : ${verificationLink}`);
+
+                            // Message pour informer l'utilisateur
+                            return res.render("connexion", {
+                                message: null,
+                                success: "Un email de confirmation a été envoyé. Vérifiez votre boîte mail."
+                            });
+                        }
+                    );
+                    // IMPORTANT : stop the execution here 
+                    return;
                 }
+
+                // IF NO PENDING USER EXIST -> CONTINUE NORMAL CREATION
 
                 // Si tout est bon, on peut maintenant hasher le mot de passe
                 // We "await" since the encryption can take little longer than normal 

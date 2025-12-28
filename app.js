@@ -10,6 +10,8 @@ dotenv.config({path: './configs.env'});
 
 const authController = require("./controller/auth");   
 
+const stratPendingUserCleanup = require("./middleware/pendingUserCleanup");
+
 // If behing a proxy server (like when deploying on Cloudfalre, Nginx, Heroku), trust the first proxy
 app.set('trust proxy', 1); // 1 Means trust first proxy
 
@@ -43,6 +45,9 @@ db.connect((err)=>{
         console.log("MYSQL Connected");
     }
 })
+
+// Start automatic cleanup of expired pending users
+stratPendingUserCleanup();
 
 // Sets "EJS" view engine for my app
 app.set("view engine", "ejs");

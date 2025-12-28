@@ -1,5 +1,8 @@
 /*! tailwindcss v4.1.10 | MIT License | https://tailwindcss.com */
 @layer properties;
+.fixed {
+  position: fixed;
+}
 .container {
   width: 100%;
 }
