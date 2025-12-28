@@ -10,6 +10,9 @@ dotenv.config({path: './configs.env'});
 
 const authController = require("./controller/auth");   
 
+// If behing a proxy server (like when deploying on Cloudfalre, Nginx, Heroku), trust the first proxy
+app.set('trust proxy', 1); // 1 Means trust first proxy
+
 
 // Variable leading to the path where all the Frontend, JS will be strored 
 // __dirname is a global variable that gives the current path 

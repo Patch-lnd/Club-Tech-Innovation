@@ -4,9 +4,13 @@ const jwt = require("jsonwebtoken")
 // Getting the encryption mudule for ourt passwords
 const bcrypt = require("bcryptjs");
 
+const crypto = require("crypto");
+// Generates revocable tokens for email link durring account creation
+
 const {generateOTP} = require("../middleware/otp");
 // generates Mailer module to send OTP to users
 const {sendOTP} = require("../middleware/mailer");
+const e = require("express");
 // Sends the mails to users
 
 
@@ -17,25 +21,31 @@ const db = mysql.createConnection({
     password: process.env.db_password,
     database:process.env.DataBase
 });
-
-exports.connexion = async(req, res) => {
+ 
+exports.connexion = async (req, res) => {
     /* const name = req.body.name
-        const email = req.body.email
-        const password = req.body.password
-        const passwordConfim = req.body.passwordConfim
-     */
+       const email = req.body.email
+       const password = req.body.password
+       const passwordConfim = req.body.passwordConfim
+    */
 
     // Using destructuring syntax
-    const {name, email, password, passwordConfirm} = req.body
+    // We collect the data sent by the html form 
+    const { name, email, password, passwordConfirm } = req.body
 
+    // Vérification de la longueur du mot de passe
     if (password.length < 6) {
         return res.render('connexion', {
-        message: "Le mot de passe doit contenir au moins 6 caractères",
-        success: null
-    })
+            message: "Le mot de passe doit contenir au moins 6 caractères",
+            success: null
+        })
     }
-    // Making the system to allow an email to be registered just Once
-    db.query('SELECT email, name FROM users WHERE email = ? OR name = ?', [email, name], async(error, result) => {
+
+    // Vérification si l'utilisateur existe déjà dans la table users
+    // "result" commes out as an array, so we wanna check how many came out
+    //If >0 it means it's already an email with value on our db
+    // "result" will contain only the email and name columns, making the query more efficient
+    db.query('SELECT email, name FROM users WHERE email = ? OR name = ?', [email, name], async (error, result) => {
         if (error) {
             console.log(error)
             return res.render('connexion', {
@@ -43,9 +53,8 @@ exports.connexion = async(req, res) => {
                 success: null
             });
         }
-        // "result" commes out as an array, so we wanna check how many came out
-        //If >0 it means it's already an email with value on our db
-        // "result" will contain only the email and name columns, making the query more efficient
+
+        // Si on trouve un résultat, l'utilisateur existe déjà
         if (result.length > 0) {
             // Check if the email is the cause of the conflict
             if (result[0].email === email) {
@@ -54,7 +63,7 @@ exports.connexion = async(req, res) => {
                     success: null
                 });
             }
-            
+
             // Check if the name is the cause of the conflict
             if (result[0].name === name) {
                 return res.render('connexion', {
@@ -62,21 +71,87 @@ exports.connexion = async(req, res) => {
                     success: null
                 });
             }
-        }else if (password !== passwordConfirm) {
-             
-            return res.render('connexion' ,{
+        } else if (password !== passwordConfirm) {
+            // Vérification que le mot de passe et la confirmation correspondent
+            return res.render('connexion', {
                 message: "Mot de passe différent",
                 success: null
             })
         }
 
-        // We "await" since the encryption can take little longet than the normal 
-        // Form execution time. We then add "async" at the beginning of our function db.query
-        // Our "password" is hashed 8 times which is the standard for a good hashing 
-        let hashedPassword = await bcrypt.hash(password, 8)
-        console.log(hashedPassword)
-        console.log(password)
-        db.query("INSERT INTO users SET ?", {name: name, email: email, password: hashedPassword}, (error, result) =>{
+        // Vérification également dans la table pending_users
+        db.query(
+            'SELECT email, name FROM pending_users WHERE email = ? OR name = ?',
+            [email, name],
+            async (pendingErr, pendingResult) => {
+                if (pendingErr) {
+                    console.log(pendingErr);
+                    return res.render('connexion', {
+                        message: "An error occurred while checking the database.",
+                        success: null
+                    });
+                }
+
+                // Si un compte est déjà en cours de création
+                if (pendingResult.length > 0) {
+                    return res.render('connexion', {
+                        message: "Un compte avec ce nom ou email est déjà en cours de création. Veuillez vérifier votre email.",
+                        success: null
+                    })
+                }
+
+                // Si tout est bon, on peut maintenant hasher le mot de passe
+                // We "await" since the encryption can take little longer than normal 
+                // Form execution time. We then add "async" at the beginning of our function db.query
+                // Our "password" is hashed 8 times which is the standard for a good hashing 
+                let hashedPassword = await bcrypt.hash(password, 8)
+                console.log("Password hashed:", hashedPassword)
+                console.log("Password plain:", password)
+
+                // Génération du token pour la vérification email
+                const emailToken = crypto.randomBytes(32).toString("hex");
+
+                // Expiration du token dans 15 minutes
+                const tokenExpiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15min from now
+
+                // Insertion dans la table pending_users
+                const insertQuery = "INSERT INTO pending_users (name, email, password, email_token, token_expires_at) VALUES (?, ?, ?, ?, ?)";
+                db.query(insertQuery,
+                    [name, email, hashedPassword, emailToken, tokenExpiresAt],
+                    async (err2) => {
+                        if (err2) {
+                            console.log(err2);
+                            return res.render("connexion", {
+                                message: "Erreur lors de la création du compte",
+                                success: null
+                            })
+                        }
+
+                        // Construction du lien de vérification
+                        // Déterminer si on est sur http ou https
+                        const protocol = req.secure ? 'https' : 'http';
+                        // Récupérer dynamiquement le nom de domaine ou l'adresse IP du serveur
+                        const host = req.get('host');
+                        // Lien complet pour vérifier l'email
+                        const verificationLink = `${protocol}://${host}/auth/verify-email?token=${emailToken}`;
+
+                        // Envoi de l'email de vérification
+                        await sendOTP(email, `Bienvenue ${name} ! Veuillez vérifier votre email en cliquant sur ce lien : ${verificationLink}`);
+
+                        // Message pour informer l'utilisateur
+                        return res.render("connexion", {
+                            message: null,
+                            success: "Un email de confirmation a été envoyé. Vérifiez votre boîte mail."
+                        });
+                    }
+                )
+            }
+        )
+    })
+}
+
+
+/*  db.query("INSERT INTO users SET ?", {name: name, email: email, password: hashedPassword}, (error, result) =>{
             if (error) {
                 console.log(error)
             }else{
@@ -86,10 +161,11 @@ exports.connexion = async(req, res) => {
                     message: null
                 }) 
             }
-        })
-    })
+        }) */
 
-}
+
+
+
 
 // LOGIN Controller 
 exports.login = async(req, res)=> {
@@ -220,6 +296,7 @@ exports.verifyOTP = function(req, res) {
                             // httpOnly empêche l'accès via JavaScript côté client
                             // secure false car on est en HTTP, mettre true en HTTPS
                             // maxAge définit la durée de vie du cookie en ms
+                            
                             res.cookie("token", token, {
                                 httpOnly: true,
                                 secure: false,
