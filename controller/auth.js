@@ -163,6 +163,88 @@ exports.connexion = async (req, res) => {
             }
         }) */
 
+exports.verifyEmail = async (req, res)=> {
+    try{
+        // Step 1 : GET the token from the query string of the URL 
+        // Example: https://mysite.com/auth/verify-email?token=abcd1234
+        const {token} = req.query;
+        // STEP 2 : Check if toekn is privided
+        if(!token){
+            return res.render("connexion", {
+                message: "Token is missing from te URL.",
+                success: null
+            })
+        }
+        // STEP 3: Look for the token in the pending_sers table 
+        const query = 'SELECT * FROM pending_users WHERE email_token = ? AND token_expires_at >= NOW() LIMIT 1';
+        db.query(query, [token], async (err, results)=>{
+            if(err){
+                console.log(err);
+                return res.render('connexion',{
+                    message: "Erreur de base de données lors de la verification de l'email",
+                    success: null
+                })
+            }
+            // STEP 4: Check id token exists and is valid 
+            if(results.length === 0){
+                return res.render("connexion", {
+                    message: "Lien Invalid ou expiré. Veuillez vous inscrire à nouveau.",
+                    success: null
+                })
+            }
+            // STEP 5: GET the user data from pending_users
+            const pendingUser = results[0];
+            const {name, email, password} = pendingUser;
+
+            // STEP 6 : Insert the user inot the main user table 
+            const insertQuery = "INSERT INTO users (name, email, password) VALUES(?, ?, ?)";
+            db.query(insertQuery, [name, email, password], (insertErr, insertResult)=>{
+                if(insertErr){
+                    console.log(insertErr);
+                    return res.render("connexion", {
+                        message: "Erreur de Base de données lors de la création du compte.",
+                        success: null
+                    })
+                }
+                // STEP 7: Remove the entry from pending_users table
+                const deleteQuery  = "DELETE FROM pending_users WHERE id = ?";
+                db.query(deleteQuery, [pendingUser.id], (deleteErr, deleteResult)=>{
+                    if(deleteErr){
+                        console.log(deleteErr);
+                        // Not blocking the user here, just logging the error
+                    }
+                    // STEP 8 : Auto-login the user after successful verification using JWT 
+                    const tokenJWT = jwt.sign({
+                        id: insertResult.insertId, name, email
+                    },
+                    process.env.JWT_SECRET ||"defaultSecretKey",
+                {
+                    expiresIn: "5h" // Token valid for 5 hours
+                })
+
+                    // STEP 9: Set the JWT as httpOnly cookie 
+                    res.cookie("token", tokenJWT, {
+                        httpOnly: true,
+                        secure: req.secure, // Use HTTPS in production
+                        maxAge: 5 * 60 * 60 * 1000 // 5 hours
+                    })
+
+                    // STEP 10: Redirect to dashboard(login) after successful verification
+                    return res.redirect("/dashboard");
+                })
+            })
+        })
+    }catch(err){
+        console.log(err);
+        return res.render("connexion", {
+            message: "Une erreur est survenue lors de la vérification de l'email.",
+            success: null
+        })
+    }
+}
+         
+
+
 
 
 
