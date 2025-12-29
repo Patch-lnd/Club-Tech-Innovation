@@ -47,7 +47,7 @@ db.connect((err)=>{
 })
 
 // Start automatic cleanup of expired pending users
-stratPendingUserCleanup();
+stratPendingUserCleanup(db);
 
 // Sets "EJS" view engine for my app
 app.set("view engine", "ejs");

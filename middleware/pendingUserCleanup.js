@@ -7,7 +7,7 @@
 
 module.exports = function startPendingUserCleanup(db) {
     // Cleanup interval : 1h 
-    const CLEANUP_INTERVAL = 60*60*1000; // 1h in milliseconds
+    const CLEANUP_INTERVAL = 20*60*1000; // For Now, 20 mins  in milliseconds
 
     setInterval(()=>{
         console.log("⏳ Running DB cleanup for expired pending users...");
