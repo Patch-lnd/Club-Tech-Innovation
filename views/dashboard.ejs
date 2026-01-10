@@ -26,15 +26,32 @@
     <!-- Options d'utilisateur: voir le contenu -->
     <% } %>
 
-    <div class="flex justify-between items-center p-4 bg-gray-100"></div>
+    <!--Pofile Section -->
+    <br /><br /><br />
+    <a href="/profile/edit">Modifier mon profil</a>
 
-    <!-- Bouton Logout-->
-    <a
-      href="/logout"
-      class="block w-fit rounded-xl bg-red-500 text-white px-6 py-3 font-semibold shadow-lg"
-    >
-      Logout
-    </a>
+    <a href="/projects/new">Créer un projet</a>
+
+    <!--Admin Only-->
+    <% if (permissions.canEditWebsiteContent) { %>
+    <a href="/admin/site-settings">Modifier le Site</a>
+
+    <!--Manage users-->
+    <% } %> <% if (permissions.canManageMembers) { %>
+    <a href="/master/users">Gestions des Membres</a>
+    <% } %>
+
+    <!--Master Only-->
+
+    <div class="flex justify-between items-center p-4 bg-gray-100">
+      <!-- Bouton Logout-->
+      <a
+        href="/logout"
+        class="block w-fit rounded-xl bg-red-500 text-white px-6 py-3 font-semibold shadow-lg"
+      >
+        Logout
+      </a>
+    </div>
 
     <%- include("footer") %>
   </body>
