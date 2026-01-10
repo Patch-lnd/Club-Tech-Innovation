@@ -17,12 +17,14 @@
     "bcryptjs": "^3.0.2",
     "concurrently": "^9.1.2",
     "cookie-parser": "^1.4.7",
+    "crypto": "^1.0.1",
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
+    "nodemailer": "^7.0.12",
     "nodemon": "^3.1.10",
     "tailwindcss": "^4.1.10"
   }

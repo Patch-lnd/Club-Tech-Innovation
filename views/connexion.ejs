@@ -1,36 +1,61 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Connexion</title>
-    <link rel="stylesheet" href="/output.css">
-    <link rel="icon" href="/images/logo-club.png" type="image/png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
- 
-</head>
-<body class="page-connexion">
-  <%- include("header") %>
-  <div class="signup-container">
-    <h2>Create Account</h2>
-    <form action="/auth/connexion" method="POST">
-      <input type="text" placeholder="Full Name" required  name="name" id="Fullname"/>
-      <input type="email" placeholder="Email Address" required  name="email" id="email"/>
-      <input type="password" name="password" id="password" placeholder="Password" required />
-      <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="Password Confirm" required />
-      <button type="submit">Sign Up</button>
-    </form>
-    <div class="footer-note">
-      Already have an account? <a href="#">Login</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion</title>
+    <link rel="stylesheet" href="/output.css" />
+    <link rel="icon" href="/images/logo-club.png" type="image/png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="page-connexion">
+    <%- include("header") %>
+    <div class="signup-container">
+      <h2>Create Account</h2>
+      <form action="/auth/connexion" method="POST">
+        <input
+          type="text"
+          placeholder="Full Name"
+          required
+          name="name"
+          id="Fullname"
+        />
+        <input
+          type="email"
+          placeholder="Email Address"
+          required
+          name="email"
+          id="email"
+        />
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Password"
+          required
+        />
+        <input
+          type="password"
+          name="passwordConfirm"
+          id="passwordConfirm"
+          placeholder="Password Confirm"
+          required
+        />
+        <button type="submit">Sign Up</button>
+      </form>
+      <div class="footer-note">
+        Already have an account? <a href="/login">Login</a>
+      </div>
+      <% if(message){%>
+      <h3 class="alert-danger"><%= message %></h3>
+      <% }%> <% if(success){%>
+      <h3 class="alert-success"><%= success %></h3>
+      <% }%>
     </div>
-     <% if(message){%>
-        <h3 class="alert-danger"><%= message %></h3>
-       <% }%>
-       <% if(success){%>
-        <h3 class="alert-success"><%= success %></h3>
-       <% }%>
-  </div>
-  <br><br><br><br><br>
- <%- include("footer.ejs") %>
-</body>
+    <br /><br /><br /><br /><br />
+    <%- include("footer.ejs") %>
+  </body>
 </html>

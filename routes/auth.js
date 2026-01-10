@@ -7,6 +7,11 @@ const router = express.Router();
 //From our form and not jsut loading it on our page
 router.post("/connexion", authController.connexion);
 
+// Login Route
+router.post("/login", authController.login);
+
+// Email verification route
+router.get('/verify-email', authController.verifyEmail);
 
 
 module.exports = router;
