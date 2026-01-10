@@ -8,7 +8,7 @@
 
 module.exports = function startPendingUserCleanup(db) {
     // Cleanup interval : 1h 
-    const CLEANUP_INTERVAL = 20*60*1000; // For Now, 20 mins  in milliseconds
+    const CLEANUP_INTERVAL = 40*60*1000; // For Now, 20 mins  in milliseconds
 
     setInterval(()=>{
         console.log("⏳ Running DB cleanup for expired Auth user's token...");
