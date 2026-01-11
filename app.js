@@ -66,6 +66,12 @@ app.use(express.json())
 // Makes sure I can take data from any form
 app.use(express.urlencoded({extended: true}))
 
+app.use((req, res, next) => {
+  // S'assure que user existe toujours dans toutes les vues
+  if (!res.locals.user) res.locals.user = null;
+  next();
+});
+
 // Page pour entrer le code OTP 
 app.get("/otp", (req, res)=>{
     const{ userId, message} = req.query; // On peut passer l'ID utilisateur via query 

@@ -1,10 +1,22 @@
 /*! tailwindcss v4.1.10 | MIT License | https://tailwindcss.com */
 @layer properties;
+.pointer-events-none {
+  pointer-events: none;
+}
 .visible {
   visibility: visible;
 }
+.absolute {
+  position: absolute;
+}
 .fixed {
   position: fixed;
+}
+.relative {
+  position: relative;
+}
+.left-1\/2 {
+  left: calc(1/2 * 100%);
 }
 .z-7 {
   z-index: 7;
@@ -33,17 +45,14 @@
 .table {
   display: table;
 }
+.h-full {
+  height: 100%;
+}
 .min-h-screen {
   min-height: 100vh;
 }
-.w-fit {
-  width: fit-content;
-}
 .w-full {
   width: 100%;
-}
-.flex-1 {
-  flex: 1;
 }
 .flex-grow {
   flex-grow: 1;
@@ -51,8 +60,15 @@
 .border-collapse {
   border-collapse: collapse;
 }
+.-translate-x-1\/2 {
+  --tw-translate-x: calc(calc(1/2 * 100%) * -1);
+  translate: var(--tw-translate-x) var(--tw-translate-y);
+}
 .transform {
   transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
+}
+.cursor-pointer {
+  cursor: pointer;
 }
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -63,14 +79,16 @@
 .items-center {
   align-items: center;
 }
-.items-start {
-  align-items: flex-start;
-}
 .justify-between {
   justify-content: space-between;
 }
 .justify-center {
   justify-content: center;
+}
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .rounded-full {
   border-radius: calc(infinity * 1px);
@@ -83,19 +101,6 @@
   border-style: var(--tw-border-style);
   border-width: 2px;
 }
-.border-4 {
-  border-style: var(--tw-border-style);
-  border-width: 4px;
-}
-.border-transparent {
-  border-color: transparent;
-}
-.bg-\[\#0d1117\] {
-  background-color: #0d1117;
-}
-.bg-\[\#161b22\] {
-  background-color: #161b22;
-}
 .bg-gradient-to-r {
   --tw-gradient-position: to right in oklab;
   background-image: linear-gradient(var(--tw-gradient-stops));
@@ -106,14 +111,14 @@
 .text-center {
   text-align: center;
 }
-.text-right {
-  text-align: right;
-}
-.capitalize {
-  text-transform: capitalize;
-}
 .italic {
   font-style: italic;
+}
+.opacity-0 {
+  opacity: 0%;
+}
+.opacity-10 {
+  opacity: 10%;
 }
 .outline {
   outline-style: var(--tw-outline-style);
@@ -127,21 +132,27 @@
   transition-timing-function: var(--tw-ease, ease);
   transition-duration: var(--tw-duration, 0s);
 }
+.transition-all {
+  transition-property: all;
+  transition-timing-function: var(--tw-ease, ease);
+  transition-duration: var(--tw-duration, 0s);
+}
 .duration-300 {
   --tw-duration: 300ms;
   transition-duration: 300ms;
-}
-.hover\:underline {
-  &:hover {
-    @media (hover: hover) {
-      text-decoration-line: underline;
-    }
-  }
 }
 .hover\:opacity-90 {
   &:hover {
     @media (hover: hover) {
       opacity: 90%;
+    }
+  }
+}
+.hover\:brightness-110 {
+  &:hover {
+    @media (hover: hover) {
+      --tw-brightness: brightness(110%);
+      filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
     }
   }
 }
@@ -383,6 +394,21 @@ nav a.active::after {
   position: relative;
   z-index: 1;
 }
+@property --tw-translate-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-translate-y {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-translate-z {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
 @property --tw-rotate-x {
   syntax: "*";
   inherits: false;
@@ -538,6 +564,9 @@ nav a.active::after {
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
+      --tw-translate-x: 0;
+      --tw-translate-y: 0;
+      --tw-translate-z: 0;
       --tw-rotate-x: initial;
       --tw-rotate-y: initial;
       --tw-rotate-z: initial;
