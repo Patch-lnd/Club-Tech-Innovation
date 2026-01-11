@@ -28,15 +28,14 @@ app.use(express.static(PublicDirectory))
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
+const attachUser = require("./middleware/attachUser");
+
+// Attaching the user's info like avatar to res.locals for ALL views
+app.use(attachUser);
+
 // Auth Middleware (Must Be Before The Routes)
 const authMiddleware = require("./middleware/authMiddleware");
 
-
-// Rendre user available for ALL views
-app.use((req, res, next) => {
-  res.locals.user = req.user || null;
-  next();
-});
 
 /* //Database Initialization
 const db = mysql.createConnection({
