@@ -1,5 +1,4 @@
 const express = require("express");
-const mysql = require("mysql");
 const app = express();
 // Importing the path node module to give directories for files running in a later on code
 const path = require("path");
@@ -8,6 +7,7 @@ const dotenv = require("dotenv");
 // Giving the path where the dotenv file will be strored for configs inside
 dotenv.config({path: './configs.env'});
 
+const db = require("./database/db");
 const authController = require("./controller/auth");   
 
 const stratPendingUserCleanup = require("./middleware/pendingUserCleanup");
@@ -28,7 +28,17 @@ app.use(express.static(PublicDirectory))
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
-//Database Initialization
+// Auth Middleware (Must Be Before The Routes)
+const authMiddleware = require("./middleware/authMiddleware");
+
+
+// Rendre user available for ALL views
+app.use((req, res, next) => {
+  res.locals.user = req.user || null;
+  next();
+});
+
+/* //Database Initialization
 const db = mysql.createConnection({
     host: process.env.db_host,
     user: process.env.db_user, 
@@ -44,7 +54,7 @@ db.connect((err)=>{
     }else{
         console.log("MYSQL Connected");
     }
-})
+}) */
 
 // Start automatic cleanup of expired pending users
 stratPendingUserCleanup(db);

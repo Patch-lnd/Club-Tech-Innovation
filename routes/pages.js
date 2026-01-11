@@ -4,6 +4,8 @@ const {protect} = require("../middleware/authMiddleware");
 const {redirectIfAuthenticated} = require("../middleware/redirectIfAuthenticated"); // Importing the middleware to redirect users to dashboard if the are connected and try to go to login or register
 const dashboardController = require("../controller/dashboardController");
 const permissionsMiddleware = require("../middleware/attachPermissions")
+const upload = require("../middleware/fileUploader"); // Importing the file uploader middleware
+const profileController = require("../controller/profileController"); // Importing the profile controller to handle profile edits
 
 const router = express.Router();
 
@@ -51,5 +53,17 @@ router.get('/logout', (req, res)=>{
     res.redirect("/login");
 });
 
-/* router.get('/dashboard', authMiddleware, userColtroller.dashboard); */
+// Formulaire pour éditer le profil 
+router.get("/profile/edit", protect, (req, res)=>{
+    res.render("profile/edit", {
+        user: req.user,
+           error: null,   // on initialise pour que EJS puisse utiliser
+        success: null    // idem pour success
+    });
+});
+
+
+// POST pour enregistrer les modifications + uplaod photo 
+router.post("/profile/edit", protect, upload.single("avatar"), profileController.editProfile);
+
 module.exports = router;

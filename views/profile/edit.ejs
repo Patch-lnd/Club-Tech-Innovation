@@ -1,0 +1,77 @@
+<%- include("../header") %>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Account</title>
+    <link rel="icon" href="/images/logo-club.png" type="image/png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="max-w-xl mx-auto p-6">
+      <h1 class="text-2xl font-bold mb-4">Modifier mon profil</h1>
+
+      <% if (error) { %>
+      <div class="bg-red-200 text-red-800 p-3 rounded mb-4"><%= error %></div>
+      <% } %> <% if (success) { %>
+      <div class="bg-green-200 text-green-800 p-3 rounded mb-4">
+        <%= success %>
+      </div>
+      <% } %>
+
+      <form
+        action="/profile/edit"
+        method="POST"
+        enctype="multipart/form-data"
+        class="space-y-4"
+      >
+        <div>
+          <label class="block font-semibold">Nom</label>
+          <input
+            type="text"
+            name="name"
+            value="<%= user.name %>"
+            class="w-full border p-2 rounded"
+            required
+          />
+        </div>
+
+        <div>
+          <label class="block font-semibold">Email</label>
+          <input
+            type="email"
+            name="email"
+            value="<%= user.email %>"
+            class="w-full border p-2 rounded"
+            required
+          />
+        </div>
+
+        <div>
+          <label class="block font-semibold">Photo de profil</label>
+          <% if (user.avatar_url) { %>
+          <img
+            src="<%= user.avatar_url %>"
+            alt="Avatar"
+            class="w-24 h-24 rounded-full mb-2"
+          />
+          <% } %>
+          <input
+            type="file"
+            name="avatar"
+            class="block border p-2 rounded w-full"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+        >
+          Enregistrer
+        </button>
+      </form>
+    </div>
+  </body>
+</html>
+<%- include("../footer") %>

@@ -1,6 +1,8 @@
 // We import jsonwebtoken to be able to verify the JWT token 
 const jwt = require("jsonwebtoken");
 
+const db = require("../database/db");
+
 /* 
     AUTHENTIFICATION MIDDLEWARE 
     This middleware will: 
@@ -39,6 +41,23 @@ exports.protect = (req, res, next) => {
    */
   try{
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    db.query(
+        "SELECT id, name, email, avatar_url, role FROM users WHERE id = ? LIMIT 1",
+        [decoded.id],
+        (err, results)=>{
+            if(err || results.length === 0){
+                res.clearCookie("token");
+                return res.redirect("/login");
+            }
+            req.user = results[0];
+            next();
+        }
+    );
+
+
+
+
     /* 
         STEP 3: Attach decoded data to the req.user 
 
@@ -50,13 +69,12 @@ exports.protect = (req, res, next) => {
         }
          We attach it to req.user so it can be used in controllers and views later 
     */ 
-   req.user = decoded;
+   /* req.user = decoded; */
    /* 
     STEP 4: Allow the request to continue 
     next() tells Express: 
     "Everything is OK, go to the next midlleware or controller"
    */
-  next();
   }catch (error){
     /* 
         If toekn is :
@@ -66,6 +84,7 @@ exports.protect = (req, res, next) => {
         jwt.verify will fail and we redirect to login 
     */
    console.log("JWT Error: ", error);
-   return res.redirect("login");
+   res.clearCookie("token");
+   return res.redirect("/login");
   }
 };

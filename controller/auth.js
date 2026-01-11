@@ -1,5 +1,6 @@
 const mysql = require("mysql");
-// Getting the jasonwebtoken module
+const db = require("../database/db"); // ton fichier de config MYSQL
+// JWT for token generation and verification
 const jwt = require("jsonwebtoken")
 // Getting the encryption mudule for ourt passwords
 const bcrypt = require("bcryptjs");
@@ -15,12 +16,12 @@ const e = require("express");
 
 
 //Database Initialization
-const db = mysql.createConnection({
+/* const db = mysql.createConnection({
     host: process.env.db_host, 
     user: process.env.db_user, 
     password: process.env.db_password,
     database:process.env.DataBase
-});
+}); */
  
 exports.connexion = async (req, res) => {
     /* const name = req.body.name

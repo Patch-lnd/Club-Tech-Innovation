@@ -1,10 +1,19 @@
 /*! tailwindcss v4.1.10 | MIT License | https://tailwindcss.com */
 @layer properties;
+.visible {
+  visibility: visible;
+}
 .fixed {
   position: fixed;
 }
+.z-7 {
+  z-index: 7;
+}
 .container {
   width: 100%;
+}
+.mx-auto {
+  margin-inline: auto;
 }
 .block {
   display: block;
@@ -44,6 +53,9 @@
 }
 .justify-center {
   justify-content: center;
+}
+.rounded-full {
+  border-radius: calc(infinity * 1px);
 }
 .border {
   border-style: var(--tw-border-style);
@@ -112,7 +124,7 @@ nav {
   border-radius: 50%;
   border: 2px solid #3399FF;
 }
-.club-name {
+span {
   font-size: 18px;
   font-weight: 600;
   color: #CCCCCC;
@@ -162,6 +174,12 @@ nav a.active {
 }
 nav a.active::after {
   width: 100%;
+}
+.nav-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 .page-connexion {
   font-family: 'Inter', sans-serif;
