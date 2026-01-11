@@ -81,8 +81,8 @@ nav a.active::after {
 }
 /* Exemple global pour avatar */
 .nav-avatar {
-    width: 40px;          /* taille souhaitée */
-    height: 40px;         /* taille souhaitée */
+    width: 50px;          /* taille souhaitée */
+    height: 50px;         /* taille souhaitée */
     border-radius: 50%;   /* cercle parfait */
     object-fit: cover;    /* remplissage correct sans déformation */
 }

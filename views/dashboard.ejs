@@ -1,57 +1,211 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bgDark: "#0d1117",
+              cardDark: "#161b22",
+              borderDark: "#30363d",
+              accent: "#58a6ff",
+              muted: "#8b949e",
+              success: "#3fb950",
+              warning: "#d29922",
+              danger: "#f85149",
+            },
+            boxShadow: {
+              glow: "0 0 30px rgba(88,166,255,0.15)",
+              soft: "0 10px 30px rgba(0,0,0,0.4)",
+            },
+          },
+        },
+      };
+    </script>
+
     <link rel="icon" href="/images/logo-club.png" type="image/png" />
   </head>
 
-  <body>
-    <%- include("header") %> <% if (user.role === "master"){ %>
-    <h1>Bienvenue au Dashboard Master, <%= user.name %>!</h1>
-    <p>You have full access to all features and settings.</p>
-    <!-- Options de master: gerer roles des utilisateurs -->
-    <% } else if (user.role === "admin"){ %>
-    <h1>Bienvenue au Dashboard Admin, <%= user.name %>!</h1>
-    <p>You can manage users and content.</p>
-    <!-- Options d'admin: modifier le contenu du site -->
+  <body class="bg-bgDark text-gray-200 min-h-screen">
+    <%- include("header") %>
 
-    <%} else {%>
-    <h1 class="text-3xl font-bold text-blue-500">
-      Bienvenue au Dashboard Utilisateur, <%= user.name %>!
-    </h1>
-    <p>Vous pouvez voir et editter votre compte</p>
-    <!-- Options d'utilisateur: voir le contenu -->
-    <% } %>
+    <main class="max-w-7xl mx-auto px-6 py-10 space-y-10">
+      <!-- HEADER -->
+      <section class="flex flex-col md:flex-row justify-between gap-6">
+        <div>
+          <h1 class="text-3xl font-bold">
+            Bienvenue,
+            <span class="text-accent"><%= user.name %></span>
+          </h1>
+          <p class="text-muted mt-1">Tableau de bord personnel</p>
 
-    <!--Pofile Section -->
-    <br /><br /><br />
-    <a href="/profile/edit">Modifier mon profil</a>
+          <% if (user.role === "master") { %>
+          <span
+            class="inline-block mt-3 px-3 py-1 text-sm rounded-full bg-purple-600/20 text-purple-400"
+          >
+            <i class="fa-solid fa-crown mr-1"></i> Master
+          </span>
+          <% } else if (user.role === "admin") { %>
+          <span
+            class="inline-block mt-3 px-3 py-1 text-sm rounded-full bg-warning/20 text-warning"
+          >
+            <i class="fa-solid fa-shield-halved mr-1"></i> Admin
+          </span>
+          <% } else { %>
+          <span
+            class="inline-block mt-3 px-3 py-1 text-sm rounded-full bg-success/20 text-success"
+          >
+            <i class="fa-solid fa-user mr-1"></i> Membre
+          </span>
+          <% } %>
+        </div>
 
-    <a href="/projects/new">Créer un projet</a>
+        <div class="flex gap-3">
+          <a
+            href="/profile/edit"
+            class="px-5 py-2 rounded-lg bg-accent text-black font-semibold hover:opacity-90 transition"
+          >
+            <i class="fa-solid fa-user-gear mr-2"></i> Modifier le profil
+          </a>
 
-    <!--Admin Only-->
-    <% if (permissions.canEditWebsiteContent) { %>
-    <a href="/admin/site-settings">Modifier le Site</a>
+          <a
+            href="/projects/new"
+            class="px-5 py-2 rounded-lg border border-borderDark hover:bg-cardDark transition"
+          >
+            <i class="fa-solid fa-diagram-project mr-2"></i> Nouveau projet
+          </a>
 
-    <!--Manage users-->
-    <% } %> <% if (permissions.canManageMembers) { %>
-    <a href="/master/users">Gestions des Membres</a>
-    <% } %>
+          <a
+            href="/blog/new"
+            class="px-5 py-2 rounded-lg border border-borderDark hover:bg-cardDark transition"
+          >
+            <i class="fa-solid fa-diagram-project mr-2"></i> Nouveau blog
+          </a>
+        </div>
+      </section>
 
-    <!--Master Only-->
-
-    <div class="flex justify-between items-center p-4 bg-gray-100">
-      <!-- Bouton Logout-->
-      <a
-        href="/logout"
-        class="block w-fit rounded-xl bg-red-500 text-white px-6 py-3 font-semibold shadow-lg"
+      <!-- PROFILE CARD -->
+      <section
+        class="bg-cardDark border border-borderDark rounded-xl p-6 flex gap-6 items-center shadow-soft"
       >
-        Logout
-      </a>
-    </div>
+        <img
+          src="<%= user.avatar_url || '/images/default_avatar.png' %>"
+          alt="Avatar"
+          class="w-32 h-32 rounded-full object-cover border-2 border-accent"
+        />
+
+        <div>
+          <h2 class="text-xl font-semibold"><%= user.name %></h2>
+          <p class="text-muted"><%= user.email %></p>
+
+          <!-- FUTUR : liens sociaux -->
+          <!--
+          <div class="flex gap-4 mt-4">
+            <a href="#" class="hover:text-accent"><i class="fa-brands fa-github"></i></a>
+            <a href="#" class="hover:text-accent"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="#" class="hover:text-accent"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+          -->
+        </div>
+      </section>
+
+      <!-- GRID -->
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- LEFT -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="bg-cardDark border border-borderDark rounded-xl p-6">
+            <h3 class="text-lg font-semibold mb-4">
+              <i class="fa-solid fa-star mr-2"></i> Top projets
+            </h3>
+
+            <p class="text-muted italic">
+              Aucun projet populaire pour le moment.
+            </p>
+
+            <!-- FUTUR BACKEND : topProjects -->
+          </div>
+
+          <div class="bg-cardDark border border-borderDark rounded-xl p-6">
+            <h3 class="text-lg font-semibold mb-4">
+              <i class="fa-solid fa-pen-nib mr-2"></i> Top blogs
+            </h3>
+
+            <p class="text-muted italic">Aucun article mis en avant.</p>
+
+            <!-- FUTUR BACKEND : topBlogs -->
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <aside class="space-y-6">
+          <div class="bg-cardDark border border-borderDark rounded-xl p-6">
+            <h3 class="text-lg font-semibold mb-4">
+              <i class="fa-solid fa-bolt mr-2"></i> Actions rapides
+            </h3>
+
+            <div class="grid gap-3">
+              <a
+                class="flex items-center gap-3 p-3 rounded-lg hover:bg-borderDark transition"
+                href="/profile/edit"
+              >
+                <i class="fa-solid fa-id-card"></i> Informations personnelles
+              </a>
+
+              <a
+                class="flex items-center gap-3 p-3 rounded-lg hover:bg-borderDark transition"
+                href="/profile/password"
+              >
+                <i class="fa-solid fa-lock"></i> Changer mot de passe
+              </a>
+            </div>
+          </div>
+
+          <% if (permissions.canEditWebsiteContent) { %>
+          <div class="bg-cardDark border border-borderDark rounded-xl p-6">
+            <h3 class="text-lg font-semibold mb-4">
+              <i class="fa-solid fa-gear mr-2"></i> Administration
+            </h3>
+            <a href="/admin/site-settings" class="hover:text-accent">
+              Paramètres du site
+            </a>
+          </div>
+          <% } %> <% if (permissions.canManageMembers) { %>
+          <div class="bg-cardDark border border-borderDark rounded-xl p-6">
+            <h3 class="text-lg font-semibold mb-4">
+              <i class="fa-solid fa-users mr-2"></i> Gestion
+            </h3>
+            <a href="/master/users" class="hover:text-accent">
+              Gestion des membres
+            </a>
+          </div>
+          <% } %>
+        </aside>
+      </section>
+
+      <!-- LOGOUT -->
+      <div class="pt-10">
+        <a
+          href="/logout"
+          class="inline-block px-6 py-3 rounded-xl bg-danger text-white font-semibold hover:opacity-90 transition"
+        >
+          <i class="fa-solid fa-right-from-bracket mr-2"></i> Logout
+        </a>
+      </div>
+    </main>
 
     <%- include("footer") %>
   </body>
