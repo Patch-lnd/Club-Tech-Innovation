@@ -38,7 +38,7 @@ exports.editProfile = async (req, res) => {
                 httpOnly: true,       // Pas accessible via JS côté client
                 secure: false,        // true si HTTPS
                 sameSite: "lax",
-                maxAge: 5 * 60 * 60 * 1000 // 5 heures
+                maxAge: 5 * 60 * 60 * 1000 // 5 heures INACTVE FI
             });
 
             return res.render("profile/edit", {

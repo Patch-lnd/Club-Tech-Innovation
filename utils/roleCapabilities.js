@@ -2,7 +2,7 @@
 
 module.exports = {
     member: {
-        conEditProfile: true,
+        canEditProfile: true,
         canUploadAvatar: true,
         canCreatProject: true,
         canEditOwnProject: true,
@@ -32,5 +32,6 @@ module.exports = {
         canModerateProjects: true,
         canEditWebsiteContent: true,
         canManageMembers: true,
+          canManageAdmin: true,
     }
 }
