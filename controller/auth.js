@@ -357,23 +357,103 @@ exports.login = async(req, res)=> {
 }
 
 
- function createAndSendOTP(user){
-    const otp = generateOTP();
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
+// Create a new OTP, invalidate the previous one, and send the new code by email
+async function createAndSendOTP(user) {
 
-    // Store OTP in database
-     db.query(
-        "INSERT INTO otp_codes(user_id, code, expires_at) VALUES(?,?,?)",
-        [user.id, otp, expiresAt],
-        async(err, result)=>{
-            if (err) return console.log(err);
-            console.log("OTP enregisrré en base de données : ", otp);
+    // Check the most recent OTP created for this user
+    db.query(
+        `SELECT * FROM otp_codes
+         WHERE user_id = ?
+         ORDER BY created_at DESC
+         LIMIT 1`,
+        [user.id],
+        async (err, rows) => {
 
-            // Envoir de l'OTP par email
-            await sendOTP (user.email, otp);
+            // Stop the process if the database query fails
+            if (err) {
+                console.log("Error while checking previous OTP:", err);
+                return;
+            }
+
+            // If a previous OTP exists, check the 30-second resend cooldown
+            if (rows.length > 0) {
+
+                // Get the creation time of the most recent OTP
+                const lastCreatedAt = new Date(rows[0].created_at).getTime();
+
+                // Get the current time in milliseconds
+                const now = Date.now();
+
+                // Calculate how many milliseconds have passed
+                const elapsed = now - lastCreatedAt;
+
+                // 30 seconds expressed in milliseconds
+                const resendCooldown = 30 * 1000;
+
+                // Reject the request if 30 seconds have not passed yet
+                if (elapsed < resendCooldown) {
+                    console.log("OTP resend blocked: 30-second cooldown is still active.");
+                    return;
+                }
+            }
+
+            // Invalidate all previous unused OTP codes for this user
+            db.query(
+                `UPDATE otp_codes
+                 SET used = 1
+                 WHERE user_id = ? AND used = 0`,
+                [user.id],
+                (updateErr) => {
+
+                    // Stop the process if the invalidation query fails
+                    if (updateErr) {
+                        console.log("Error while invalidating previous OTPs:", updateErr);
+                        return;
+                    }
+
+                    // Generate a new six-digit OTP
+                    const otp = generateOTP();
+
+                    // Set the new OTP expiration to five minutes from now
+                    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+
+                    // Store the new OTP in the database
+                    db.query(
+                        `INSERT INTO otp_codes(user_id, code, expires_at)
+                         VALUES (?, ?, ?)`,
+                        [user.id, otp, expiresAt],
+                        async (insertErr) => {
+
+                            // Stop the process if the insertion fails
+                            if (insertErr) {
+                                console.log("Error while saving new OTP:", insertErr);
+                                return;
+                            }
+
+                            // Log the OTP for development purposes
+                            console.log("New OTP saved in database:", otp);
+
+                            try {
+
+                                // Send the new OTP to the user's email
+                                await sendOTP(user.email, otp);
+
+                                // Confirm that the email was sent successfully
+                                console.log(`OTP sent successfully to ${user.email}`);
+
+                            } catch (emailError) {
+
+                                // Handle email sending errors
+                                console.log("Error while sending OTP email:", emailError);
+                            }
+                        }
+                    );
+                }
+            );
         }
     );
 }
+
 
 exports.verifyOTP = function(req, res) {
     // On récupère les données envoyées depuis le formulaire OTP (userId et otp)
