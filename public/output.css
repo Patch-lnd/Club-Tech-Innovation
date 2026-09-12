@@ -15,6 +15,9 @@
 .relative {
   position: relative;
 }
+.top-1\/2 {
+  top: calc(1/2 * 100%);
+}
 .left-1\/2 {
   left: calc(1/2 * 100%);
 }
@@ -71,6 +74,10 @@
 }
 .-translate-x-1\/2 {
   --tw-translate-x: calc(calc(1/2 * 100%) * -1);
+  translate: var(--tw-translate-x) var(--tw-translate-y);
+}
+.-translate-y-1\/2 {
+  --tw-translate-y: calc(calc(1/2 * 100%) * -1);
   translate: var(--tw-translate-x) var(--tw-translate-y);
 }
 .transform {
@@ -188,6 +195,11 @@
   &:focus {
     --tw-outline-style: none;
     outline-style: none;
+  }
+}
+.active\:scale-\[0\.99\] {
+  &:active {
+    scale: 0.99;
   }
 }
 body {

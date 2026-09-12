@@ -66,4 +66,16 @@ router.get("/profile/edit", protect, (req, res)=>{
 // POST pour enregistrer les modifications + uplaod photo 
 router.post("/profile/edit", protect, upload.single("avatar"), profileController.editProfile);
 
+// GET route for the change-password page
+router.get("/profile/password", protect, (req, res) => {
+    res.render("profile/password", {
+        user: req.user,
+        error: null,
+        success: null
+    });
+});
+
+// POST route for changing the user's password
+router.post("/profile/password", protect, profileController.changePassword);
+
 module.exports = router;
