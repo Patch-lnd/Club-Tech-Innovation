@@ -1,5 +1,9 @@
-const { text } = require('express');
 const nodemailer = require('nodemailer');
+const fs = require('fs'); 
+const path = require('path');
+
+// Load email CSS 
+const mailCSS = fs.readFileSync(path.join(__dirname, 'public','mail_UI.css'), 'utf8');
 
 // Configuration du transporteur SMTP (exemple Gmail)
 const transporter = nodemailer.createTransport({
