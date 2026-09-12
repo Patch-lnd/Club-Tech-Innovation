@@ -1,0 +1,163 @@
+<%- include("../header") %>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Account</title>
+
+    <!-- Tailwind Config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bgDark: "#0d1117",
+              cardDark: "#161b22",
+              borderDark: "#30363d",
+              accent: "#58a6ff",
+              muted: "#8b949e",
+            },
+            boxShadow: {
+              glow: "0 0 20px rgba(88,166,255,0.15)",
+              glowStrong: "0 0 35px rgba(88,166,255,0.3)",
+            },
+            animation: {
+              float: "float 6s ease-in-out infinite",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0px)" },
+                "50%": { transform: "translateY(-10px)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="icon" href="/images/logo-club.png" type="image/png" />
+  </head>
+
+  <body class="bg-bgDark text-gray-200 min-h-screen flex flex-col">
+    <main class="flex-grow max-w-3xl mx-auto px-6 py-10">
+      <!-- HEADER -->
+      <section class="text-center mb-10 relative">
+        <h1 class="text-3xl font-bold text-white mb-2">Modifier mon profil</h1>
+        <p class="text-muted">Mettez à jour vos informations et votre avatar</p>
+
+        <!-- LIGHT EFFECT (motion background) -->
+        <div
+          class="absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-40 bg-accent rounded-full opacity-10 animate-float blur-3xl pointer-events-none"
+        ></div>
+      </section>
+
+      <!-- FORM CARD -->
+      <section
+        class="bg-cardDark border border-borderDark rounded-2xl p-8 shadow-glow"
+      >
+        <% if (error) { %>
+        <div
+          class="bg-red-800/30 text-red-400 p-3 rounded mb-4 border border-red-600"
+        >
+          <%= error %>
+        </div>
+        <% } %> <% if (success) { %>
+        <div
+          class="bg-green-800/30 text-green-400 p-3 rounded mb-4 border border-green-600"
+        >
+          <%= success %>
+        </div>
+        <% } %>
+
+        <form
+          action="/profile/edit"
+          method="POST"
+          enctype="multipart/form-data"
+          class="space-y-6"
+        >
+          <!-- NAME -->
+          <div>
+            <label class="block font-semibold mb-1 text-muted">Nom</label>
+            <input
+              type="text"
+              name="name"
+              value="<%= user.name %>"
+              class="w-full p-3 rounded-xl bg-bgDark border border-borderDark text-white focus:outline-none focus:ring-2 focus:ring-accent transition"
+              required
+            />
+          </div>
+
+          <!-- EMAIL -->
+          <div>
+            <label class="block font-semibold mb-1 text-muted">Email</label>
+            <input
+              type="email"
+              name="email"
+              value="<%= user.email %>"
+              class="w-full p-3 rounded-xl bg-bgDark border border-borderDark text-white truncate focus:outline-none focus:ring-2 focus:ring-accent transition"
+              title="<%= user.email %>"
+              required
+            />
+          </div>
+
+          <!-- AVATAR -->
+          <div class="flex flex-col items-center">
+            <label class="font-semibold mb-2 text-muted">Photo de profil</label>
+            <div class="relative">
+              <img
+                src="<%= user.avatar_url ? user.avatar_url : '/images/default_avatar.png' %>"
+                alt="Avatar"
+                class="w-32 h-32 rounded-full border-2 border-accent object-cover shadow-glowStrong mb-3"
+              />
+              <input
+                type="file"
+                name="avatar"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer rounded-full"
+                title="Cliquez pour changer votre avatar"
+              />
+            </div>
+          </div>
+
+          <!-- PASSWORD CONFIRM (for profile validation) -->
+          <!-- FUTUR BACKEND -->
+          <!--
+          <div>
+            <label class="block font-semibold mb-1 text-muted">Mot de passe actuel</label>
+            <input type="password" name="current_password" class="w-full p-3 rounded-xl bg-bgDark border border-borderDark text-white focus:outline-none focus:ring-2 focus:ring-accent transition"/>
+          </div>
+          -->
+
+          <!-- SUBMIT -->
+          <div class="text-center">
+            <button
+              type="submit"
+              class="bg-accent text-black font-semibold px-8 py-3 rounded-2xl shadow-glow hover:brightness-110 transition-all"
+            >
+              Enregistrer les modifications
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- QUICK LINKS -->
+      <section class="mt-10 flex justify-center gap-6">
+        <a
+          href="/dashboard"
+          class="px-6 py-2 rounded-xl bg-cardDark border border-borderDark text-muted hover:text-accent hover:shadow-glow transition"
+        >
+          Retour au Dashboard
+        </a>
+        <a
+          href="/profile/password"
+          class="px-6 py-2 rounded-xl bg-cardDark border border-borderDark text-muted hover:text-accent hover:shadow-glow transition"
+        >
+          Changer mot de passe
+        </a>
+      </section>
+    </main>
+
+    <%- include("../footer") %>
+  </body>
+</html>

@@ -12,7 +12,7 @@ yarn-error.log*
 
 #Environment variables
 .env
-confings.env
+configs.env
 
 #Build and caxhe files
 #Tailwind CSS

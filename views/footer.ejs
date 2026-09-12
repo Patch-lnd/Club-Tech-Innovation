@@ -1,40 +1,89 @@
-<!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title></title>
-    <link rel="stylesheet" href="/output.css" />
-  </head>
-  <body>
-    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-    <div class="footer">
-      <section class="section1">
-        <hr />
-        <div class="f1">
-          <h2>Club Technologie et Innovation</h2>
-          <p>
-            Explorez le monde de la techologie et de l'inovation avec notre
-            Platforme de Club
+<script src="https://cdn.tailwindcss.com"></script>
+
+<footer class="bg-[#0f172a] border-t border-slate-700 text-slate-300">
+  <div class="max-w-7xl mx-auto px-4 py-5">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
+      <!-- COL 1 : NAVIGATION + SOCIAL -->
+      <div class="space-y-4">
+        <div>
+          <h3 class="text-slate-200 font-medium mb-2">Navigation</h3>
+          <ul class="space-y-1">
+            <li><a href="/" class="hover:text-blue-400">Accueil</a></li>
+            <li><a href="/projects" class="hover:text-blue-400">Projets</a></li>
+            <li><a href="/blog" class="hover:text-blue-400">Blog</a></li>
+            <li><a href="/apropos" class="hover:text-blue-400">À propos</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-slate-200 font-medium mb-2">Réseaux</h3>
+          <div class="flex gap-3 text-lg">
+            <a href="#" class="text-slate-400 hover:text-blue-500">
+              <i class="fab fa-facebook"></i>
+            </a>
+            <a href="#" class="text-slate-400 hover:text-sky-400">
+              <i class="fab fa-tiktok"></i>
+            </a>
+            <a href="#" class="text-slate-400 hover:text-pink-500">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="text-slate-400 hover:text-white">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="#" class="text-slate-400 hover:text-blue-600">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- COL 2 : CONTACT -->
+      <div>
+        <h3 class="text-slate-200 font-medium mb-3">Contact</h3>
+        <div class="space-y-2">
+          <p class="flex items-center gap-2">
+            <i class="fas fa-envelope text-blue-400"></i>
+            contact@clubtechnologie.fr
+          </p>
+          <p class="flex items-center gap-2">
+            <i class="fas fa-phone text-green-400"></i>
+            +237 652 36 00 69
           </p>
         </div>
-        <div class="f2">
-          <h2>Liens Rapides</h2>
-          <a href="/">Accueil</a>
-          <a href="/projects">Projets</a>
-          <a href="/blog">Blog</a>
-          <a href="/apropos">A propos</a>
+      </div>
+
+      <!-- COL 3 & 4 : LOGO + IDENTITÉ -->
+      <div class="md:col-span-2">
+        <div class="flex items-start gap-4">
+          <div
+            class="w-24 h-24 border border-slate-500 rounded-lg bg-slate-800 flex items-center justify-center shrink-0"
+          >
+            <img
+              src="/images/logo-club.png"
+              alt="Logo Club"
+              class="max-w-full max-h-full object-contain"
+            />
+          </div>
+
+          <div>
+            <h2 class="text-lg font-semibold text-slate-100">
+              Club Technologie et Innovation
+            </h2>
+            <p class="text-slate-400 mt-1 leading-snug max-w-md">
+              Une plateforme dédiée aux passionnés de technologie, à
+              l’innovation et aux projets concrets à fort impact académique et
+              professionnel.
+            </p>
+          </div>
         </div>
-        <div class="f3">
-          <h2>Contact</h2>
-          <p>Email: contact@clubtechnologie.fr</p>
-          <p>Téléphone: +237 652 36 00 69</p>
-        </div>
-      </section>
-      <section class="section2">
-        <hr />
-        &copy 2025 Club Techologie et Innovation. Tous droits réservés.
-      </section>
+      </div>
     </div>
-  </body>
-</html>
+  </div>
+
+  <!-- COPYRIGHT -->
+  <div
+    class="text-center text-xs text-slate-500 py-2 border-t border-slate-700"
+  >
+    © 2025 Club Technologie et Innovation — Tous droits réservés
+  </div>
+</footer>

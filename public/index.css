@@ -28,7 +28,7 @@ nav {
   border-radius: 50%;
   border: 2px solid #3399FF;
 }
-.club-name {
+span {
   font-size: 18px;
   font-weight: 600;
   color: #CCCCCC;
@@ -79,3 +79,11 @@ nav a.active {
 nav a.active::after {
   width: 100%;
 }
+/* Exemple global pour avatar */
+.nav-avatar {
+    width: 50px;          /* taille souhaitée */
+    height: 50px;         /* taille souhaitée */
+    border-radius: 50%;   /* cercle parfait */
+    object-fit: cover;    /* remplissage correct sans déformation */
+}
+

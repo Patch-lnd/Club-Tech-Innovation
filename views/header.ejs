@@ -20,17 +20,30 @@
         <a href="/"
           ><img src="/images/logo-club.png" alt="Logo du club" class="logo"
         /></a>
-        <span class="club-name"
-          >Club Ecologique et Technologies de l'Innovation</span
-        >
+        <!-- previously using class="club-name" and replanced by span on css  -->
+        <span>Club Ecologique et Technologies de l'Innovation</span>
       </div>
       <ul>
         <li><a href="/">Accueil</a></li>
         <li><a href="/projects">Projets</a></li>
         <li><a href="/blog">Blog</a></li>
         <li><a href="/apropos">À propos</a></li>
-        <li>
+        <!-- <li>
           <a href="/connexion"><i class="fa-regular fa-user"></i></a>
+        </li> -->
+        <li>
+          <% if (user) { %>
+          <a href="/dashboard" class="flex items-center">
+            <img
+              src="<%= user.avatar_url ? user.avatar_url : '/images/default_avatar.png' %>"
+              alt="Avatar"
+              class="nav-avatar"
+            />
+            <!-- <span class="ml-2"><%= user.name %></span> -->
+          </a>
+          <% } else { %>
+          <a href="/connexion"><i class="fa-regular fa-user"></i></a>
+          <% } %>
         </li>
       </ul>
     </nav>
